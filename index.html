@@ -16,10 +16,14 @@
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-  :root{--bg:#0a0d14;--card:#141a26;--card2:#1a2130;--line:#232b3a;--line2:#2f3a4d;--ink:#eef2f8;--mut:#93a0b5;--dim:#66728a;--accent:#7c8bff;--accent2:#22d3ac;--benefit:#34d399;--green:#34d399;--blue:#38bdf8;--amber:#fbbf24;--red:#fb7185;--shadow:0 12px 34px rgba(0,0,0,.4)}
+  :root{--bg:#05080f;--card:#0d1320;--card2:#111a28;--line:#1c2537;--line2:#2a3448;--ink:#eaf1fb;--mut:#8fa0bb;--dim:#5f6d86;--accent:#8b93ff;--accent2:#22d3ee;--cyan:#22d3ee;--violet:#a78bfa;--benefit:#34d399;--green:#34d399;--blue:#38bdf8;--amber:#fbbf24;--red:#fb7185;--shadow:0 18px 44px rgba(0,0,0,.55)}
   *{box-sizing:border-box}
-  body{margin:0;background:radial-gradient(1100px 560px at 72% -12%,#182votes 0,transparent 60%),linear-gradient(180deg,#0a0d14,#0b0f18);color:var(--ink);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
-  body{background:radial-gradient(1100px 560px at 72% -12%,#141d33 0,transparent 60%),linear-gradient(180deg,#0a0d14,#0b0f18)}
+  body{margin:0;color:var(--ink);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(900px 480px at 88% -8%,rgba(34,211,238,.14),transparent 60%),
+      radial-gradient(820px 460px at 6% 8%,rgba(167,139,250,.13),transparent 58%),
+      linear-gradient(180deg,#05080f,#070b14 40%,#05080f);
+    background-attachment:fixed}
   a{color:var(--accent2);text-decoration:none}
   .wrap{max-width:1180px;margin:0 auto;padding:0 18px}
   header.top{padding:32px 0 6px;text-align:center}
@@ -141,6 +145,31 @@
   .sec.td{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.28);border-radius:12px;padding:11px 14px}
   .sec.td h4{color:var(--amber)}
   .sec.td p{font-weight:600}
+  /* brand / logo */
+  .brand{display:flex;align-items:center;justify-content:center;gap:15px;margin-bottom:2px}
+  .logo-mark{filter:drop-shadow(0 0 12px rgba(34,211,238,.45));flex:none}
+  .brand-txt{text-align:left;line-height:1}
+  .brand-tag{display:block;font-size:10.5px;font-weight:700;letter-spacing:6.5px;color:var(--cyan);margin-top:5px;opacity:.85}
+  header.top{padding:40px 0 8px}
+  header.top h1{margin:0;font-size:38px;letter-spacing:-1.2px;background:linear-gradient(92deg,#eaf1fb,#a78bfa 55%,#22d3ee);-webkit-background-clip:text;background-clip:text;color:transparent}
+  header.top .sub{font-size:14.5px;margin-top:15px}
+  .badge{background:rgba(34,211,238,.08);color:var(--cyan);border:1px solid rgba(34,211,238,.28)}
+  /* controls */
+  .controls{background:rgba(7,11,20,.74)}
+  .search:focus{border-color:var(--cyan)!important;box-shadow:0 0 0 3px rgba(34,211,238,.12)!important}
+  .chip.active{background:linear-gradient(92deg,var(--violet),var(--cyan))!important;color:#05080f!important;border-color:transparent!important;font-weight:700}
+  /* cards */
+  .card{position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),var(--violet),transparent);opacity:0;transition:opacity .16s}
+  .card:hover{transform:translateY(-3px);border-color:rgba(34,211,238,.4);box-shadow:0 16px 42px rgba(0,0,0,.55),0 0 0 1px rgba(34,211,238,.14)}
+  .card:hover::before{opacity:1}
+  .card h3{letter-spacing:-.3px}
+  .catchip{background:rgba(139,147,255,.12)!important;border:1px solid rgba(139,147,255,.3)!important;color:var(--accent)!important}
+  .bt{background:rgba(52,211,153,.09);border:1px solid rgba(52,211,153,.24)}
+  .viewnav .vbtn.on{background:linear-gradient(92deg,var(--violet),var(--cyan));box-shadow:0 6px 18px rgba(34,211,238,.25)}
+  /* recon tip */
+  .rgtip{background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.22);border-radius:10px;padding:10px 12px;font-size:13px;margin-top:6px}
+  @media(max-width:560px){header.top h1{font-size:30px}.brand{gap:11px}.logo-mark{width:42px;height:42px}}
 </style>
 </head>
 <body>
@@ -162,8 +191,31 @@
 </div>
 
 <header class="top"><div class="wrap">
-  <h1>PepTalk</h1>
-  <div class="sub">Your easy peptide reference &mdash; potential benefits, dosing, reconstitution, stacks &amp; safety.</div>
+  <div class="brand">
+    <svg class="logo-mark" viewBox="0 0 48 48" width="50" height="50" aria-hidden="true">
+      <defs>
+        <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/>
+        </linearGradient>
+        <filter id="gl" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.1" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <path d="M24 2.5 41.5 12.75 41.5 33.25 24 43.5 6.5 33.25 6.5 12.75Z" fill="rgba(34,211,238,.05)" stroke="url(#lg)" stroke-width="1.8" stroke-linejoin="round"/>
+      <g filter="url(#gl)" stroke="url(#lg)" stroke-width="2.1" fill="none" stroke-linecap="round">
+        <path d="M17.5 14 C 27 19, 21 27, 30.5 32"/>
+        <path d="M30.5 14 C 21 19, 27 27, 17.5 32"/>
+        <line x1="19.2" y1="16.4" x2="28.8" y2="16.4"/>
+        <line x1="21.2" y1="21" x2="26.8" y2="21"/>
+        <line x1="21.2" y1="25" x2="26.8" y2="25"/>
+        <line x1="19.2" y1="29.6" x2="28.8" y2="29.6"/>
+      </g>
+      <g fill="url(#lg)">
+        <circle cx="17.5" cy="14" r="2.3"/><circle cx="30.5" cy="14" r="2.3"/>
+        <circle cx="30.5" cy="32" r="2.3"/><circle cx="17.5" cy="32" r="2.3"/>
+      </g>
+    </svg>
+    <div class="brand-txt"><h1>PepTalk</h1><span class="brand-tag">RESEARCH</span></div>
+  </div>
+  <div class="sub">Your easy peptide reference &mdash; benefits, dosing, mixing, stacks &amp; safety, in plain English.</div>
   <div class="badge">Educational &middot; Cited &middot; 68 compounds</div>
   <div class="legend">
     <span><i class="dot" style="background:var(--green)"></i> Approved / Strong</span>
@@ -392,13 +444,12 @@ function render(){
     const idx=DATA.indexOf(d);
     const el=document.createElement('div');el.className='card evc-'+d.ev;el.onclick=()=>openModal(idx);
     const tags=(d.ben||[]).slice(0,3).map(b=>`<span class="bt">${b}</span>`).join('');
-    const _rk=popIdx(d.n);const _rb=_rk<POP.length?`<span class="rankb">#${_rk+1}</span>`:'';
-    el.innerHTML=`<div class="chd"><div><h3>${_rb}${d.n}</h3><div class="aka">${d.aka||''}</div></div><div class="chd-r"><button class="fav-btn${isFav(d.n)?' on':''}" title="Save to favorites">${isFav(d.n)?'\u2605':'\u2606'}</button><span class="catchip">${CATSHORT[d.cat]||d.cat}</span></div></div><div class="btags">${tags}</div><div class="ev"><span class="d" style="background:var(--ec)"></span>${d.ev} evidence</div>`;var _fb=el.querySelector(".fav-btn");if(_fb)_fb.onclick=function(e){toggleFav(d.n,e);};
+    el.innerHTML=`<div class="chd"><div><h3>${d.n}</h3><div class="aka">${d.aka||''}</div></div><div class="chd-r"><button class="fav-btn${isFav(d.n)?' on':''}" title="Save to favorites">${isFav(d.n)?'\u2605':'\u2606'}</button><span class="catchip">${CATSHORT[d.cat]||d.cat}</span></div></div><div class="btags">${tags}</div><div class="ev"><span class="d" style="background:var(--ec)"></span>${d.ev} evidence</div>`;var _fb=el.querySelector(".fav-btn");if(_fb)_fb.onclick=function(e){toggleFav(d.n,e);};
     grid.appendChild(el);
   });
   if(!list.length)grid.innerHTML='<div class="count">No matches &mdash; try clearing a filter.</div>';
 }
-const RECON_GUIDE=`<details class="rg"><summary>How to reconstitute &amp; measure &mdash; general guide</summary><div class="rgb"><p class="rgv"><a href="https://www.youtube.com/results?search_query=how+to+reconstitute+peptides" target="_blank" rel="noopener">&#9654; Watch: how to reconstitute peptides (top YouTube tutorials) &rarr;</a></p><p><b>1. Solvent.</b> Most research peptides ship as a freeze-dried (lyophilized) powder. <b>Bacteriostatic water (BAC water)</b> is standard for multi-use vials (it has a preservative); sterile water or saline is used for single use.</p><p><b>2. Add slowly.</b> Draw the water into a syringe, insert into the peptide vial, and let it run <b>slowly down the inside wall</b> &mdash; do not blast it onto the powder.</p><p><b>3. Do not shake.</b> Gently swirl or let it dissolve on its own. Shaking can damage fragile peptides.</p><p><b>4. Concentration math.</b> Concentration = peptide amount &divide; water added. Example: <b>a 10&nbsp;mg vial + 2&nbsp;mL BAC water = 5&nbsp;mg/mL (5,000&nbsp;mcg/mL)</b>. On a U-100 insulin syringe, 100 units = 1&nbsp;mL, so each <b>unit = 50&nbsp;mcg</b>. (10&nbsp;mg + 1&nbsp;mL would be 10&nbsp;mg/mL, i.e. 100&nbsp;mcg per unit.) Adjust the water volume to make the math easy for your target dose.</p><p><b>5. Storage.</b> Keep reconstituted peptide <b>refrigerated (2&ndash;8&deg;C), out of light</b>. Discard if cloudy, discolored, or past its stability window.</p><p><b>6. Sterility.</b> Wipe the vial stopper with alcohol, use a <b>fresh sterile needle</b> each time, and never share needles.</p><p class="rgn">General lab/prep technique for education &mdash; not a recommendation to self-administer. Many of these compounds are not approved for human use.</p></div></details>`;
+const RECON_GUIDE=`<details class="rg"><summary>How to mix your peptide &mdash; simple steps</summary><div class="rgb"><p class="rgv"><a href="https://www.youtube.com/results?search_query=how+to+reconstitute+peptides" target="_blank" rel="noopener">&#9654; Watch a quick video: how to mix peptides &rarr;</a></p><p><b>You'll need:</b> your peptide vial (the powder), a vial of <b>bacteriostatic water</b> ("BAC water"), an insulin syringe, and alcohol swabs.</p><p><b>1.</b> Wipe the top of both vials with an alcohol swab.</p><p><b>2.</b> Pull your BAC water into the syringe (see the tip below for how much).</p><p><b>3.</b> Put the needle into the peptide vial and let the water run <b>slowly down the side</b> &mdash; don't squirt it right onto the powder.</p><p><b>4.</b> <b>Gently swirl</b> &mdash; never shake. Wait until it looks clear.</p><p><b>5.</b> Store it in the <b>fridge</b>. Throw it out if it turns cloudy or changes color.</p><p class="rgtip"><b>How much water = how strong.</b> More water makes it weaker (easier to measure small doses); less water makes it stronger. Easy example: a <b>10&nbsp;mg vial + 2&nbsp;mL water</b> means <b>1 tick on an insulin syringe = 50&nbsp;mcg</b>. So 20 ticks = 1,000&nbsp;mcg (1&nbsp;mg).</p><p class="rgn">Educational only &mdash; not a recommendation to inject. Many of these are not approved for human use.</p></div></details>`;
 function sec(cls,title,val){return val?`<div class="sec ${cls}"><h4>${title}</h4><p>${val}</p></div>`:'';}
 function openModal(i){
   const d=DATA[i];
