@@ -229,6 +229,8 @@ const DATA = [{"n": "Semaglutide", "aka": "Ozempic, Wegovy, Rybelsus", "cat": "M
 const FAVS=new Set(JSON.parse(localStorage.getItem("plib_favs")||"[]"));function saveFavs(){try{localStorage.setItem("plib_favs",JSON.stringify([...FAVS]));}catch(e){}}function isFav(n){return FAVS.has(n);}function toggleFav(n,ev){if(ev){ev.stopPropagation();}if(FAVS.has(n))FAVS.delete(n);else FAVS.add(n);saveFavs();render();}const state={cat:new Set(),fav:false};
 function collect(){state.cat.clear();state.fav=false;document.querySelectorAll('.chip.active').forEach(c=>{if(c.dataset.cat)state.cat.add(c.dataset.cat.replace('&amp;','&'));if(c.dataset.fav)state.fav=true;});}
 const CATSHORT={'Growth hormone':'Growth','Healing & recovery':'Healing','Sexual health':'Sexual','Immune & anti-inflammatory':'Immune'};
+const POP=["Retatrutide","Tirzepatide","Semaglutide","BPC-157","TB-500","GHK-Cu","MOTS-c","Tesamorelin","CJC-1295","Ipamorelin","MK-677","Cagrilintide","Semax","Selank","NAD+","IGF-1 LR3","Follistatin","Sermorelin","PT-141","Melanotan II","5-Amino-1MQ","Epithalon","SS-31","Thymosin Beta-4","Thymosin Alpha-1","KPV","Kisspeptin","Glutathione","AOD-9604","Survodutide","Mazdutide","VK2735","Amycretin","Pemvidutide","Liraglutide","Pramlintide","Orforglipron","Tesofensine","GHRP-2","GHRP-6","Hexarelin","PEG-MGF","Gonadorelin","Melanotan I","GLOW / KLOW Blend","Humanin","ARA-290","LL-37","DSIP","Oxytocin","VIP","Dihexa","Cerebrolysin","Pinealon","Vesugen","Thymogen","Argireline","Matrixyl","SNAP-8","Exenatide","Dulaglutide","Larazotide","Davunetide","Adipotide","FOXO4-DRI","P021","SLU-PP-332","BRP"];
+function popIdx(n){var k=POP.indexOf(n);return k<0?999:k;}
 function render(){
   collect();
   const q=document.getElementById('search').value.trim().toLowerCase();
@@ -240,8 +242,8 @@ function render(){
     return true;
   });
   const order={Approved:0,Strong:1,Moderate:2,Preliminary:3,Speculative:4};
-  list.sort((a,b)=>order[a.ev]-order[b.ev]||a.n.localeCompare(b.n));
-  document.getElementById('count').textContent=list.length+' of '+DATA.length+' peptides';
+  list.sort((a,b)=>popIdx(a.n)-popIdx(b.n)||order[a.ev]-order[b.ev]||a.n.localeCompare(b.n));
+  document.getElementById('count').textContent=list.length+' of '+DATA.length+' peptides · most popular first';
   list.forEach((d)=>{
     const idx=DATA.indexOf(d);
     const el=document.createElement('div');el.className='card evc-'+d.ev;el.onclick=()=>openModal(idx);
@@ -286,56 +288,56 @@ function mtab(btn,i){const m=btn.closest('.modal');m.querySelectorAll('.tab').fo
 
 const STACKS=[
  {n:"Lean Recomp Stack",pop:"Most popular",goal:"GLP-1 fat loss without muscle loss",peps:["Retatrutide or Semaglutide","CJC-1295","Ipamorelin"],
-  dose:["Semaglutide — 0.25 mg/week to start, titrate up slowly (or Retatrutide — 2 mg/week to start)","CJC-1295 + Ipamorelin — ~100 mcg + 100–200 mcg together, before bed, 5 nights/week"],
+  dose:["Semaglutide — start 0.25 mg/week → target 1.7–2.4 mg/week (raise every 4 weeks)","or Retatrutide — start 2 mg/week → target 8–12 mg/week","CJC-1295 + Ipamorelin — 100 mcg + 100 → 200 mcg, before bed, 5 nights/week"],
   why:["<b>GLP-1 (Reta / Sema)</b> — drives the fat loss and appetite control.",
        "<b>CJC-1295 + Ipamorelin</b> — keep growth hormone up, which otherwise plummets in a calorie deficit, so you hold muscle."],
   syn:"GLP-1 works on a completely separate receptor from the GH secretagogues (ghrelin pathway), so they are mechanistically compatible — fat comes off while lean mass is defended. This is the #1 trending weight-loss pairing.",
   note:"Popular online; combination not studied in a formal trial."},
  {n:"GH Base Stack",pop:"Very popular",goal:"Sleep, recovery & body composition",peps:["CJC-1295","Ipamorelin"],
-  dose:["CJC-1295 (mod GRF) — ~100 mcg before bed","Ipamorelin — 100–200 mcg with it, once nightly, 5 nights/week"],
+  dose:["CJC-1295 (mod GRF) — 100 mcg before bed (stays flat)","Ipamorelin — start 100 mcg → up to 200–300 mcg, once nightly, 5 nights/week"],
   why:["<b>CJC-1295</b> — GHRH analog. Raises the baseline growth-hormone level.",
        "<b>Ipamorelin</b> — ghrelin-receptor agonist. Adds a clean GH pulse with minimal cortisol or prolactin."],
   syn:"The classic starter stack and the most widely used pair in the compounding world: the two act on two different receptors that amplify each other, giving a bigger, more natural GH pulse than either alone. The right kind of pairing — different mechanisms, not two of the same.",
   note:"Well-established combo in research communities; still off-label."},
  {n:"Wolverine Recovery Stack",pop:"Very popular",goal:"Injury, tendon & tissue repair",peps:["BPC-157","TB-500"],
-  dose:["BPC-157 — 250–500 mcg/day subQ (often near the injury)","TB-500 — 2–2.5 mg twice weekly to load, then ~2 mg weekly"],
+  dose:["BPC-157 — start 250 mcg/day → 500 mcg/day subQ (near the injury)","TB-500 — 2–2.5 mg twice weekly to load → 2 mg once weekly maintenance"],
   why:["<b>BPC-157</b> — drives localized healing, angiogenesis, and gut/tendon repair.",
        "<b>TB-500</b> — works more systemically: cell migration, angiogenesis, and lowering inflammation."],
   syn:"They heal through complementary pathways (angiogenesis vs. cell migration) and do not interfere, which is why it is the most popular recovery pairing. Usually run 8–12 weeks around an acute injury.",
   note:"Largely experimental; FDA has flagged both — hype currently outruns human evidence."},
  {n:"Bulking / Lean Mass Stack",pop:"Very popular",goal:"Direct muscle growth + recovery",peps:["CJC-1295","Ipamorelin","IGF-1 LR3"],
-  dose:["CJC-1295 + Ipamorelin — ~100 mcg + 100–200 mcg before bed, 5 nights/week","IGF-1 LR3 — 20–50 mcg/day (often post-workout), start low"],
+  dose:["CJC-1295 + Ipamorelin — 100 mcg + 100 → 200 mcg before bed, 5 nights/week","IGF-1 LR3 — start 20 mcg/day → target 40–50 mcg/day (post-workout)"],
   why:["<b>CJC-1295 + Ipamorelin</b> — raise growth hormone 2–3x with a clean nightly pulse.",
        "<b>IGF-1 LR3</b> — the strongest direct anabolic here; a long-acting IGF-1 that drives muscle protein synthesis downstream of GH."],
   syn:"The GH secretagogues push the growth-hormone / IGF-1 axis from the top, and IGF-1 LR3 adds the direct downstream muscle-building signal — upstream drive plus downstream anabolism. Recovery improves in 1–2 weeks, lean mass over a ~12-week cycle.",
   note:"IGF-1 LR3 can cause low blood sugar and grows all tissue, not just muscle — advanced/higher-risk. Creatine, protein and training still beat any of these in real human evidence."},
  {n:"Reta + Tesamorelin",pop:"Popular",goal:"Aggressive fat loss, muscle preserved",peps:["Retatrutide or Semaglutide","Tesamorelin"],
-  dose:["Retatrutide — 2 mg/week to start (or Semaglutide 0.25 mg/week), titrate slowly","Tesamorelin — 1–2 mg/day subQ in the evening"],
+  dose:["Retatrutide — start 2 mg/week → target 8–12 mg/week (or Semaglutide 0.25 → 2.4 mg/week)","Tesamorelin — start 1 mg/day → 2 mg/day subQ in the evening"],
   why:["<b>Retatrutide / Semaglutide</b> — triple- or single-agonist fat loss and appetite control across the whole body.",
        "<b>Tesamorelin</b> — GH stimulation that preferentially strips visceral fat and holds onto lean mass during the deficit."],
   syn:"Often called the most powerful fat-loss pair: one drives overall fat loss, the other targets stubborn visceral belly fat and protects muscle. Different receptors, so they add up rather than overlap.",
   note:"Trending for body-recomp; no combined human trial exists."},
  {n:"Triple Metabolic Stack",pop:"Trending",goal:"Fat loss while defending lean mass",peps:["Retatrutide","MOTS-c","Tesamorelin"],
-  dose:["Retatrutide — 2 mg/week to start, titrate slowly","MOTS-c — 5–10 mg/week (often split into 2–3 subQ shots)","Tesamorelin — 1–2 mg/day in the evening"],
+  dose:["Retatrutide — start 2 mg/week → target 8–12 mg/week","MOTS-c — start 5 mg/week → 10 mg/week (split into 2–3 subQ shots)","Tesamorelin — start 1 mg/day → 2 mg/day in the evening"],
   why:["<b>Retatrutide</b> — triple agonist (GLP-1 / GIP / glucagon). Cuts appetite, and its glucagon arm actively mobilizes stored fat, including from the liver.",
        "<b>MOTS-c</b> — mitochondrial peptide. Restores the cells' ability to run on fat, improves insulin sensitivity, and fights the fatigue and metabolic slow-down that stalls a cut.",
        "<b>Tesamorelin</b> — GHRH analog. A growth-hormone pulse that targets visceral (belly) fat and defends muscle, so the deficit costs fat, not lean mass."],
   syn:"Three different pathways with little overlap: Retatrutide drives the deficit, MOTS-c keeps the engine burning fat, and Tesamorelin protects muscle while hitting visceral fat. That is why the trend pairs these three instead of stacking more of the same.",
   note:"No human trial has tested this exact combination — the synergy is mechanistic."},
  {n:"Next-Gen Weight Loss (CagriSema-style)",pop:"Trending / new",goal:"Deeper appetite control than GLP-1 alone",peps:["Retatrutide or Semaglutide","Cagrilintide"],
-  dose:["Semaglutide — 0.25 mg/week to start (or Retatrutide 2 mg/week)","Cagrilintide — 0.25 mg/week to start, titrate every 4 weeks toward 2.4 mg"],
+  dose:["Semaglutide — start 0.25 mg/week → target 2.4 mg/week (or Retatrutide 2 → 12 mg/week)","Cagrilintide — start 0.25 mg/week → target 2.4 mg/week (raise every 4 weeks)"],
   why:["<b>GLP-1 (Reta / Sema)</b> — the main fat-loss and appetite driver.",
        "<b>Cagrilintide</b> — an amylin analog that boosts satiety through a <i>different</i> hunger hormone, so you feel full sooner and longer."],
   syn:"Two different appetite systems (GLP-1 + amylin) instead of doubling up on one. In trials, adding cagrilintide to semaglutide (CagriSema) pushed average weight loss from ~15% to ~20%. Reta + cagrilintide is the newer, stronger DIY version.",
   note:"Investigational; the combinations are not FDA-approved and Reta+Cagri has no published trial."},
  {n:"Bodybuilding Recomp Stack",pop:"Popular",goal:"Size & appetite (oral + injectable GH)",peps:["MK-677","CJC-1295"],
-  dose:["MK-677 — 10–25 mg by mouth, once nightly","CJC-1295 (mod GRF) — ~100 mcg before bed"],
+  dose:["MK-677 — start 10 mg → target 25 mg by mouth, once nightly","CJC-1295 (mod GRF) — 100 mcg before bed (stays flat)"],
   why:["<b>MK-677</b> — an oral ghrelin agonist that raises 24-hour GH and IGF-1 and boosts appetite (helpful for bulking).",
        "<b>CJC-1295</b> — a GHRH analog that adds a sharp nightly GH pulse from a different receptor."],
   syn:"MK-677 lifts your all-day baseline GH/IGF-1 and hunger; CJC-1295 adds a clean pulse on top. A convenient oral + injectable pairing for size. (MK-677 already hits the ghrelin receptor, so don't add Ipamorelin on top of it.)",
   note:"MK-677 causes water retention, a big appetite, and can raise blood sugar / lower insulin sensitivity."},
  {n:"KLOW Skin & Recovery Stack",pop:"Popular",goal:"Skin, collagen & full-body repair",peps:["GHK-Cu","BPC-157","TB-500","KPV"],
-  dose:["GHK-Cu — 1–2 mg/day subQ","BPC-157 — 250–500 mcg/day","TB-500 — 2–2.5 mg twice weekly","KPV — 250–500 mcg/day"],
+  dose:["GHK-Cu — start 1 mg/day → 2 mg/day subQ","BPC-157 — start 250 → 500 mcg/day","TB-500 — 2–2.5 mg twice weekly → 2 mg weekly","KPV — start 250 → 500 mcg/day"],
   why:["<b>GHK-Cu</b> — copper peptide: collagen, elastin, firmer skin, fewer fine lines.",
        "<b>BPC-157</b> — localized tissue and gut repair.",
        "<b>TB-500</b> — systemic cell migration and angiogenesis.",
@@ -343,33 +345,33 @@ const STACKS=[
   syn:"Each hits a different phase of repair — rebuild (GHK-Cu), local fix (BPC-157), remodeling (TB-500) and cooling inflammation (KPV). Sold pre-mixed as the GLOW (3-part) or KLOW (4-part) blend.",
   note:"Cosmetic/repair claims are largely preclinical."},
  {n:"Russian Nootropic Stack",pop:"Popular (cognitive)",goal:"Focus, mood & calm",peps:["Semax","Selank"],
-  dose:["Semax — 300 mcg intranasal, 1–2x/day (morning/early afternoon)","Selank — 250 mcg intranasal, 1–2x/day (morning and evening)"],
+  dose:["Semax — start 300 mcg → up to 600 mcg intranasal, 1–2x/day (AM/early afternoon)","Selank — start 250 mcg → up to 500 mcg intranasal, 1–2x/day (AM and PM)"],
   why:["<b>Semax</b> — the activator: raises BDNF and dopamine for focus, drive and neuroprotection.",
        "<b>Selank</b> — the stabilizer: boosts calming GABA and steadies serotonin, easing anxiety without fog."],
   syn:"One pushes performance, the other keeps you calm — so you get sharper focus without the jitters. Common approach: Semax in the morning/early afternoon, Selank morning and evening.",
   note:"Approved in Russia, not FDA-approved. Usually nasal sprays."},
  {n:"Tesamorelin + Ipamorelin",pop:"Popular (GH)",goal:"Visceral fat + clean GH pulse",peps:["Tesamorelin","Ipamorelin"],
-  dose:["Tesamorelin — 1–2 mg/day in the evening","Ipamorelin — 100–200 mcg before bed"],
+  dose:["Tesamorelin — start 1 mg/day → 2 mg/day in the evening","Ipamorelin — start 100 mcg → 200–300 mcg before bed"],
   why:["<b>Tesamorelin</b> — the stronger GHRH, best known for cutting visceral (belly) fat.",
        "<b>Ipamorelin</b> — a clean ghrelin-receptor pulse with little cortisol or prolactin."],
   syn:"Same GHRH + GHRP logic as the GH base stack, but Tesamorelin leans it toward visceral-fat loss. Two receptors that amplify each other for a bigger, cleaner GH release.",
   note:"Off-label; the pairing itself is not formally trialed."},
  {n:"Advanced Myostatin Stack",pop:"Niche / advanced",goal:"Push past normal muscle limits",peps:["Follistatin-344","IGF-1 LR3","CJC-1295","Ipamorelin"],
-  dose:["Follistatin-344 — 100 mcg/day subQ for a 10–30 day cycle, then time off","IGF-1 LR3 — 20–50 mcg/day, start low","CJC-1295 + Ipamorelin — ~100 mcg + 100–200 mcg before bed"],
+  dose:["Follistatin-344 — 100 mcg/day subQ, 10 → 30 day cycle, then time off","IGF-1 LR3 — start 20 mcg/day → target 40–50 mcg/day","CJC-1295 + Ipamorelin — 100 mcg + 100 → 200 mcg before bed"],
   why:["<b>Follistatin-344</b> — blocks myostatin, the body's own brake on muscle growth.",
        "<b>IGF-1 LR3</b> — a direct anabolic growth signal for muscle.",
        "<b>CJC-1295 + Ipamorelin</b> — support the GH axis underneath it all."],
   syn:"Take the brake off (Follistatin) while pushing the gas (IGF-1 LR3) and supporting GH — three different levers on muscle. An advanced, expensive stack for people who've already dialed in training, food and sleep.",
   note:"Very limited human evidence, high cost, daily injections; IGF-1 LR3 and myostatin inhibition both carry real risks. Not a beginner stack."},
  {n:"Longevity Stack",pop:"Niche / biohacker",goal:"Cellular energy, sleep & aging",peps:["Epithalon","MOTS-c","NAD+"],
-  dose:["Epithalon — 5–10 mg/day for a 10–20 day cycle, 1–2x/year","MOTS-c — 5–10 mg/week","NAD+ — start low (~50 mg subQ) and push slowly; higher doses are usually given IV"],
+  dose:["Epithalon — 5–10 mg/day, 10–20 day cycle, 1–2x/year","MOTS-c — start 5 mg/week → 10 mg/week","NAD+ — start 50 mg subQ → 100 mg (push slowly); higher doses usually IV"],
   why:["<b>Epithalon</b> — supports telomere/telomerase activity and resets circadian sleep rhythm.",
        "<b>MOTS-c</b> — mitochondrial peptide for metabolism and exercise-like signaling.",
        "<b>NAD+</b> — the cofactor behind cellular energy and DNA repair."],
   syn:"Three separate longevity levers — telomeres/sleep, mitochondria, and cellular energy — that do not overlap, which is why biohackers combine rather than double up.",
   note:"Longevity claims are early and mostly preclinical/anecdotal."},
  {n:"Immune & Gut Stack",pop:"Niche",goal:"Gut lining repair + immune support",peps:["BPC-157","Thymosin Alpha-1"],
-  dose:["BPC-157 — 250–500 mcg/day (oral or subQ for gut)","Thymosin Alpha-1 — 1.6 mg twice weekly (or ~500 mcg/day)"],
+  dose:["BPC-157 — start 250 → 500 mcg/day (oral or subQ for gut)","Thymosin Alpha-1 — 300 mcg/day week 1 → 500 mcg/day (or 1.6 mg twice weekly)"],
   why:["<b>BPC-157</b> — repairs the gut lining and calms GI inflammation.",
        "<b>Thymosin Alpha-1</b> — modulates and strengthens the immune system."],
   syn:"Gut repair plus immune tuning — a common pairing for people recovering gut health while supporting immunity. Two different jobs, so they complement rather than overlap.",
@@ -384,7 +386,7 @@ const DONT=[
  {h:"The general rule",p:"Don't stack two peptides that hit the same receptor or clearance pathway. Redundancy means more side effects, not more results."}
 ];
 function buildStacks(){
-  document.getElementById('stackGrid').innerHTML=STACKS.map((s,i)=>`<div class="stack-card"><div class="stack-pop"><span class="rk">#${i+1}</span> ${s.pop}</div><h3>${s.n}</h3><div class="stack-goal">${s.goal}</div><div class="stack-peps">${s.peps.map(p=>`<span>${p}</span>`).join('')}</div><div class="stack-why"><h4>How they complement each other</h4><ul>${s.why.map(w=>`<li>${w}</li>`).join('')}</ul><div class="stack-syn">${s.syn}</div><div class="stack-dose"><h4>Suggested starting dose</h4><ul>${(s.dose||[]).map(x=>`<li>${x}</li>`).join('')}</ul></div><div class="stack-note">${s.note}</div></div></div>`).join('');
+  document.getElementById('stackGrid').innerHTML=STACKS.map((s,i)=>`<div class="stack-card"><div class="stack-pop"><span class="rk">#${i+1}</span> ${s.pop}</div><h3>${s.n}</h3><div class="stack-goal">${s.goal}</div><div class="stack-peps">${s.peps.map(p=>`<span>${p}</span>`).join('')}</div><div class="stack-why"><h4>How they complement each other</h4><ul>${s.why.map(w=>`<li>${w}</li>`).join('')}</ul><div class="stack-syn">${s.syn}</div><div class="stack-dose"><h4>Dosing &mdash; start &rarr; target</h4><ul>${(s.dose||[]).map(x=>`<li>${x}</li>`).join('')}</ul></div><div class="stack-note">${s.note}</div></div></div>`).join('');
   document.getElementById('dontGrid').innerHTML=DONT.map(d=>`<div class="dont-card"><h4>${d.h}</h4><p>${d.p}</p></div>`).join('');
 }
 function showView(v){
