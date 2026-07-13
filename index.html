@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peptide Research Library — Educational Reference</title>
+<meta name="description" content="An educational reference on research peptides: mechanisms, evidence levels, regulatory status, and risks. Not medical advice. No dosing information.">
+<meta name="theme-color" content="#0f1e33">
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Peptides">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+
+<style>
+  :root{
+    --navy:#0f1e33; --navy2:#16294a; --panel:#1b2f52; --line:#2a4468;
+    --ink:#eaf0f8; --mut:#9fb2cc; --gold:#e9b949; --teal:#37b3a8; --coral:#e8654f;
+    --green:#3bb273; --amber:#e0a23a; --red:#d9534f; --blue:#4a90d9; --violet:#9b7ede;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0c1728,#0f1e33 40%,#122443);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.55}
+  a{color:var(--teal)}
+  .wrap{max-width:1150px;margin:0 auto;padding:0 18px}
+  header.top{padding:34px 0 10px;text-align:center;border-bottom:1px solid var(--line)}
+  header.top h1{margin:0;font-size:30px;letter-spacing:.3px}
+  header.top .sub{color:var(--mut);margin-top:6px;font-size:15px}
+  .badge{display:inline-block;background:rgba(233,185,73,.14);color:var(--gold);border:1px solid rgba(233,185,73,.4);
+    font-size:12px;padding:3px 10px;border-radius:20px;margin-top:12px}
+  .controls{position:sticky;top:0;z-index:20;background:rgba(12,23,40,.94);backdrop-filter:blur(6px);
+    padding:14px 0;border-bottom:1px solid var(--line)}
+  .search{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:#0e1c33;color:var(--ink);font-size:16px}
+  .search::placeholder{color:#7c90ad}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+  .fl-label{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-right:2px}
+  .chip{cursor:pointer;font-size:13px;padding:6px 11px;border-radius:20px;border:1px solid var(--line);
+    background:#12233f;color:var(--mut);user-select:none}
+  .chip:hover{border-color:var(--teal);color:var(--ink)}
+  .chip.active{background:var(--teal);border-color:var(--teal);color:#04121a;font-weight:600}
+  .count{color:var(--mut);font-size:13px;margin:16px 0 6px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;padding:6px 0 40px}
+  .card{background:linear-gradient(180deg,var(--panel),var(--navy2));border:1px solid var(--line);border-radius:14px;
+    padding:16px;cursor:pointer;transition:transform .12s,border-color .12s}
+  .card:hover{transform:translateY(-3px);border-color:var(--teal)}
+  .card h3{margin:0 0 2px;font-size:17px}
+  .card .aka{color:var(--mut);font-size:12.5px;min-height:16px}
+  .card .cat{display:inline-block;font-size:11px;color:var(--mut);margin-top:9px;border:1px solid var(--line);
+    border-radius:6px;padding:2px 7px}
+  .ev{display:inline-flex;align-items:center;gap:6px;font-size:12px;margin-top:11px;font-weight:600}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .ev-Approved .dot,.ev-Approved{color:var(--green)} .ev-Approved .dot{background:var(--green)}
+  .ev-Strong .dot,.ev-Strong{color:var(--green)} .ev-Strong .dot{background:var(--green)}
+  .ev-Moderate .dot,.ev-Moderate{color:var(--blue)} .ev-Moderate .dot{background:var(--blue)}
+  .ev-Preliminary .dot,.ev-Preliminary{color:var(--amber)} .ev-Preliminary .dot{background:var(--amber)}
+  .ev-Speculative .dot,.ev-Speculative{color:var(--red)} .ev-Speculative .dot{background:var(--red)}
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(4,10,20,.72);display:none;align-items:flex-start;justify-content:center;
+    z-index:60;padding:30px 14px;overflow:auto}
+  .overlay.show{display:flex}
+  .modal{max-width:720px;width:100%;background:linear-gradient(180deg,#16294a,#0f1e33);border:1px solid var(--line);
+    border-radius:16px;padding:26px 26px 30px}
+  .modal h2{margin:0 0 2px;font-size:24px}
+  .modal .aka2{color:var(--mut);font-size:14px}
+  .metarow{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+  .tag{font-size:12px;padding:4px 10px;border-radius:8px;border:1px solid var(--line);background:#12233f;color:var(--mut)}
+  .tag.ev{border:none;color:#04121a;font-weight:700}
+  .sec{margin-top:18px}
+  .sec h4{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--gold)}
+  .sec.risk h4{color:var(--coral)}
+  .sec p{margin:0;color:#dbe5f2;font-size:14.5px}
+  .cite{font-size:12.5px;color:var(--mut);margin-top:4px}
+  .close{float:right;cursor:pointer;color:var(--mut);font-size:26px;line-height:1;margin:-6px -4px 0 0}
+  .close:hover{color:var(--ink)}
+  footer{border-top:1px solid var(--line);padding:24px 0 60px;color:var(--mut);font-size:12.5px;text-align:center}
+  /* gate */
+  .gate{position:fixed;inset:0;background:#0a1523;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+  .gate .box{max-width:560px;background:linear-gradient(180deg,#16294a,#0f1e33);border:1px solid var(--line);
+    border-radius:16px;padding:30px}
+  .gate h2{margin:0 0 10px;color:var(--gold)}
+  .gate p{color:#d3deee;font-size:14.5px}
+  .gate ul{color:#c2d0e4;font-size:14px;padding-left:18px}
+  .gate button{margin-top:18px;width:100%;padding:14px;border:none;border-radius:10px;background:var(--teal);
+    color:#04121a;font-size:16px;font-weight:700;cursor:pointer}
+  .gate .decline{background:transparent;color:var(--mut);border:1px solid var(--line);margin-top:10px}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:14px 0 2px;font-size:12.5px;color:var(--mut)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  @media(max-width:560px){header.top h1{font-size:24px}.modal{padding:20px}}
+</style>
+</head>
+<body>
+
+<!-- Disclaimer gate -->
+<div class="gate" id="gate">
+  <div class="box">
+    <h2>Before you enter</h2>
+    <p>This is an <strong>educational reference library</strong> summarizing published research on peptides. By continuing you acknowledge:</p>
+    <ul>
+      <li>This is <strong>not medical advice</strong> and not a recommendation to use any substance.</li>
+      <li>It contains <strong>no dosing, reconstitution, or usage instructions</strong> — by design.</li>
+      <li>Many peptides listed are <strong>research chemicals not approved for human use</strong>. Some carry serious risks.</li>
+      <li>Always consult a licensed medical professional before making health decisions.</li>
+      <li>You are 18 years of age or older.</li>
+    </ul>
+    <button onclick="enter()">I understand — enter the library</button>
+    <button class="decline" onclick="location.href='https://www.fda.gov'">Take me elsewhere</button>
+  </div>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <h1>Peptide Research Library</h1>
+    <div class="sub">An educational reference on research peptides — mechanisms, evidence, regulatory status &amp; risks.</div>
+    <div class="badge">Educational only · No dosing · Cited</div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--green)"></i> Approved / Strong evidence</span>
+      <span><i class="dot" style="background:var(--blue)"></i> Moderate</span>
+      <span><i class="dot" style="background:var(--amber)"></i> Preliminary</span>
+      <span><i class="dot" style="background:var(--red)"></i> Speculative / higher-risk</span>
+    </div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="wrap">
+    <input class="search" id="search" placeholder="Search peptides, e.g. 'GLP-1', 'healing', 'growth hormone'..." oninput="render()">
+    <div class="filters">
+      <span class="fl-label">Evidence</span>
+      <span class="chip" data-ev="Approved" onclick="tog(this,'ev')">Approved</span>
+      <span class="chip" data-ev="Strong" onclick="tog(this,'ev')">Strong</span>
+      <span class="chip" data-ev="Moderate" onclick="tog(this,'ev')">Moderate</span>
+      <span class="chip" data-ev="Preliminary" onclick="tog(this,'ev')">Preliminary</span>
+      <span class="chip" data-ev="Speculative" onclick="tog(this,'ev')">Speculative</span>
+      <span class="fl-label" style="margin-left:8px">Category</span>
+      <span class="chip" data-cat="Metabolic" onclick="tog(this,'cat')">Metabolic</span>
+      <span class="chip" data-cat="Growth hormone" onclick="tog(this,'cat')">Growth</span>
+      <span class="chip" data-cat="Healing &amp; recovery" onclick="tog(this,'cat')">Healing</span>
+      <span class="chip" data-cat="Cognitive" onclick="tog(this,'cat')">Cognitive</span>
+      <span class="chip" data-cat="Longevity" onclick="tog(this,'cat')">Longevity</span>
+      <span class="chip" data-cat="Sexual health" onclick="tog(this,'cat')">Sexual</span>
+      <span class="chip" data-cat="Cosmetic" onclick="tog(this,'cat')">Cosmetic</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="count" id="count"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal"></div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>This library is an independent educational reference compiled from public scientific literature and regulatory sources.
+    It is not affiliated with any manufacturer or seller, is not medical advice, and intentionally contains no dosing or administration guidance.
+    "Research use only" labeling does not make a substance safe or legal for human use. Consult a licensed professional.</p>
+  </div>
+</footer>
+
+<script>
+function enter(){document.getElementById('gate').style.display='none';}
+function tog(el,type){el.classList.toggle('active');render();}
+function closeModal(){document.getElementById('overlay').classList.remove('show');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+const DATA = [
+ {n:"Semaglutide",aka:"Ozempic, Wegovy, Rybelsus",cat:"Metabolic",ev:"Approved",reg:"FDA-approved (T2 diabetes, chronic weight management)",
+  mech:"GLP-1 receptor agonist. Enhances glucose-dependent insulin secretion, slows gastric emptying, and reduces appetite via central pathways.",
+  res:"Large randomized trials (SUSTAIN, STEP, SELECT) show substantial A1c lowering, 12–15%+ average weight loss, and reduced major cardiovascular events in higher-risk patients.",
+  risk:"Common GI effects (nausea, vomiting, diarrhea). Boxed warning for thyroid C-cell tumors (rodent data); contraindicated with personal/family history of medullary thyroid carcinoma or MEN2. Reports of pancreatitis and gallbladder disease.",
+  cite:"NEJM STEP & SELECT trials; FDA prescribing information."},
+
+ {n:"Tirzepatide",aka:"Mounjaro, Zepbound (\"TR-2\" class)",cat:"Metabolic",ev:"Approved",reg:"FDA-approved (T2 diabetes, obesity)",
+  mech:"Dual GIP and GLP-1 receptor agonist — combines two incretin pathways to improve glycemic control and reduce body weight.",
+  res:"SURPASS and SURMOUNT trials show A1c reductions and average weight loss around 20% at higher doses — among the largest seen with pharmacotherapy.",
+  risk:"GI effects are dose-limiting. Same thyroid C-cell boxed warning as GLP-1 agonists; pancreatitis and gallbladder risk. Long-term safety still accumulating.",
+  cite:"NEJM SURPASS & SURMOUNT trials; FDA prescribing information."},
+
+ {n:"Retatrutide",aka:"\"RT-3\" class, GLP-1/GIP/glucagon",cat:"Metabolic",ev:"Moderate",reg:"Investigational — not approved (Phase 3 ongoing)",
+  mech:"Triple agonist at GIP, GLP-1, and glucagon receptors; the glucagon arm may increase energy expenditure in addition to appetite effects.",
+  res:"A Phase 2 trial reported mean weight reduction approaching 24% at 48 weeks — striking, but from a mid-stage study. Phase 3 outcomes and long-term safety are pending.",
+  risk:"GI effects; dose-dependent heart-rate increase observed. Not approved — efficacy and safety are not yet confirmed at the population level.",
+  cite:"Jastreboff et al., NEJM 2023 (Phase 2)."},
+
+ {n:"Tesamorelin",aka:"Egrifta (\"TESA\")",cat:"Growth hormone",ev:"Approved",reg:"FDA-approved (HIV-associated lipodystrophy)",
+  mech:"Stabilized growth-hormone-releasing hormone (GHRH) analog that stimulates the pituitary to release growth hormone in a physiologic pattern.",
+  res:"Approved specifically to reduce excess visceral abdominal fat in HIV lipodystrophy; trials show reduced visceral adipose tissue. Uses beyond this indication are not well established.",
+  risk:"Can raise IGF-1 and affect glucose tolerance; injection-site reactions. Not studied for general anti-aging or bodybuilding use; caution with cancer history.",
+  cite:"Falutz et al., NEJM 2007; FDA label."},
+
+ {n:"Sermorelin",aka:"GHRH (1-29)",cat:"Growth hormone",ev:"Moderate",reg:"Previously FDA-approved (diagnostic); now compounded",
+  mech:"GHRH analog stimulating pituitary GH release. Historically used to assess pituitary function in children.",
+  res:"Well-characterized ability to raise GH/IGF-1 acutely. Modern use is largely off-label/compounded for anti-aging; robust long-term outcome data in healthy adults are limited.",
+  risk:"Injection-site reactions, flushing, headache. Long-term safety in healthy adults not established; effects on glucose and cancer risk under-studied.",
+  cite:"Historic FDA diagnostic approval; pituitary-function literature."},
+
+ {n:"CJC-1295",aka:"with/without DAC",cat:"Growth hormone",ev:"Preliminary",reg:"Research chemical — not approved",
+  mech:"Long-acting GHRH analog; the DAC version binds albumin to extend half-life and sustain GH elevation.",
+  res:"Small studies show sustained increases in GH and IGF-1. Clinical outcome data (body composition, function) in healthy people are sparse.",
+  risk:"Sustained GH elevation can impair glucose tolerance and cause water retention; long-term safety unknown. Frequently sold as an unregulated research chemical.",
+  cite:"Teichman et al., J Clin Endocrinol Metab 2006."},
+
+ {n:"Ipamorelin",aka:"—",cat:"Growth hormone",ev:"Preliminary",reg:"Research chemical — not approved",
+  mech:"Selective ghrelin-receptor agonist (GH secretagogue) that stimulates GH release with relatively little effect on cortisol or prolactin.",
+  res:"Reliably triggers GH pulses in preclinical and early human work. Long-term human outcome data are lacking; often paired with CJC-1295 in the research-chemical market.",
+  risk:"Generally mild acute effects; genuine long-term safety unknown. Unregulated sourcing means purity and identity are uncertain.",
+  cite:"Raun et al., Eur J Endocrinol 1998."},
+
+ {n:"MK-677",aka:"Ibutamoren",cat:"Growth hormone",ev:"Preliminary",reg:"Investigational — not approved",
+  mech:"Orally active ghrelin-receptor agonist. Note: it is a non-peptide small molecule, included here because it is marketed alongside GH peptides.",
+  res:"Raises GH and IGF-1 and can increase lean mass and appetite in trials; a study in older adults showed increased muscle mass without clear functional benefit.",
+  risk:"Increased appetite, edema, insulin resistance, and raised blood glucose. One heart-failure trial was stopped early over safety signals. Not a peptide.",
+  cite:"Nass et al., Ann Intern Med 2008; Murphy et al."},
+
+ {n:"BPC-157",aka:"Body Protection Compound-157",cat:"Healing & recovery",ev:"Speculative",reg:"Research chemical — not approved (no human trials)",
+  mech:"A synthetic peptide fragment; proposed to promote angiogenesis and tissue repair via growth-factor and nitric-oxide pathways.",
+  res:"Widely studied in rodents for tendon, muscle, gut, and ligament healing with positive results. There are essentially no controlled human trials — the popular claims outrun the human evidence.",
+  risk:"Human safety is unknown; no controlled human data. FDA has moved to restrict it from compounding. Purity of research-market product is uncertain.",
+  cite:"Numerous rodent studies (Sikiric et al.); no human RCTs."},
+
+ {n:"TB-500",aka:"Thymosin Beta-4 fragment",cat:"Healing & recovery",ev:"Speculative",reg:"Research chemical — not approved (no human efficacy trials)",
+  mech:"Synthetic version of a region of Thymosin Beta-4, a protein involved in actin regulation, cell migration, and wound healing.",
+  res:"Preclinical models suggest roles in tissue repair and cardiac protection. Human efficacy trials for the injectable 'TB-500' are lacking; banned in sport.",
+  risk:"No established human safety data for the research product; theoretical concerns around promoting unwanted cell growth. Prohibited by WADA.",
+  cite:"Preclinical Thymosin β4 literature; WADA Prohibited List."},
+
+ {n:"Thymosin Alpha-1",aka:"Zadaxin",cat:"Healing & recovery",ev:"Moderate",reg:"Approved in some countries (not FDA-approved in US)",
+  mech:"Immunomodulating peptide that influences T-cell maturation and innate immune signaling.",
+  res:"Used in several countries as an immune modulator (e.g., alongside hepatitis therapy and in sepsis studies). Evidence is mixed and indication-specific.",
+  risk:"Generally well tolerated in studied settings; injection-site reactions. Not FDA-approved; self-directed immune modulation is not advisable without oversight.",
+  cite:"Hepatitis and sepsis clinical literature; regional approvals."},
+
+ {n:"GHK-Cu",aka:"Copper tripeptide-1",cat:"Cosmetic",ev:"Moderate",reg:"Cosmetic ingredient (topical); injectable not approved",
+  mech:"Copper-binding tripeptide involved in wound signaling; topically it supports collagen/elastin expression and antioxidant activity.",
+  res:"Reasonable evidence for topical skin benefits (firmness, fine lines, wound support) in cosmetic studies. Systemic/injectable claims are not well supported.",
+  risk:"Topical use is generally well tolerated. Injectable/systemic use is unstudied and not recommended; copper balance matters.",
+  cite:"Pickart & Margolina, Int J Mol Sci 2018 (topical)."},
+
+ {n:"PT-141",aka:"Bremelanotide, Vyleesi",cat:"Sexual health",ev:"Approved",reg:"FDA-approved (hypoactive sexual desire disorder, premenopausal women)",
+  mech:"Melanocortin-receptor agonist acting centrally on pathways involved in sexual desire — a brain-mediated, not vascular, mechanism.",
+  res:"Approved after RECONNECT trials showed modest but significant improvements in desire and reduced distress in premenopausal women with HSDD.",
+  risk:"Nausea, flushing, headache; transient blood-pressure increase and possible focal hyperpigmentation. Not for people with uncontrolled hypertension or cardiovascular disease.",
+  cite:"Kingsberg et al., Obstet Gynecol 2019; FDA label."},
+
+ {n:"Melanotan II",aka:"MT-II",cat:"Cosmetic",ev:"Speculative",reg:"Research chemical — not approved (safety concerns)",
+  mech:"Non-selective melanocortin agonist that stimulates melanin production (tanning) and has central effects on appetite and libido.",
+  res:"Produces skin darkening, but is unapproved and unregulated. Case reports link it to changing/atypical moles and melanoma concerns.",
+  risk:"Nausea, flushing, spontaneous erections, darkening of moles, and reports of melanoma. Unregulated purity. Among the higher-risk items in this library.",
+  cite:"Case reports in dermatology literature; regulatory warnings."},
+
+ {n:"Semax",aka:"—",cat:"Cognitive",ev:"Preliminary",reg:"Approved in Russia; not FDA-approved",
+  mech:"ACTH(4-10) analog proposed to modulate BDNF and neurotrophic signaling; used regionally as a nootropic/neuroprotective agent.",
+  res:"Used in Russia for stroke and cognitive indications with regional clinical data. Rigorous international trials are limited.",
+  risk:"Reported as well tolerated in regional use; independent long-term safety data are limited. Sourcing quality varies widely.",
+  cite:"Russian clinical literature; BDNF studies."},
+
+ {n:"Selank",aka:"—",cat:"Cognitive",ev:"Preliminary",reg:"Approved in Russia; not FDA-approved",
+  mech:"Tuftsin-derived peptide with proposed anxiolytic effects, possibly via GABA/serotonergic and immune modulation.",
+  res:"Regional studies suggest anti-anxiety effects without strong sedation. International evidence is thin.",
+  risk:"Generally reported as well tolerated regionally; robust independent safety data lacking.",
+  cite:"Russian anxiolytic studies."},
+
+ {n:"MOTS-c",aka:"Mitochondrial ORF of 12S rRNA-c",cat:"Longevity",ev:"Preliminary",reg:"Research chemical — not approved",
+  mech:"Mitochondrial-derived peptide implicated in metabolic regulation and AMPK signaling; studied as an exercise-mimetic in animals.",
+  res:"Rodent studies show improved metabolic flexibility and insulin sensitivity. Human data are essentially absent.",
+  risk:"No established human safety data; effects and appropriate context in people are unknown. Popular claims are preclinical.",
+  cite:"Lee et al., Cell Metab 2015 (rodent)."},
+
+ {n:"Epithalon",aka:"Epitalon, Epithalamin",cat:"Longevity",ev:"Speculative",reg:"Research chemical — not approved",
+  mech:"Tetrapeptide proposed to influence telomerase activity and pineal/melatonin regulation.",
+  res:"Some Russian studies report longevity and telomere effects; these have not been independently replicated to modern standards.",
+  risk:"Human safety and efficacy largely unverified outside a small regional literature; telomerase modulation raises theoretical cancer questions.",
+  cite:"Khavinson et al. (regional); not independently replicated."},
+
+ {n:"AOD-9604",aka:"Anti-obesity drug fragment",cat:"Metabolic",ev:"Preliminary",reg:"Investigational — failed to meet endpoints; not approved",
+  mech:"A fragment of the C-terminus of human growth hormone, originally developed to stimulate fat metabolism without full GH effects.",
+  res:"Advanced to human obesity trials but did not produce significant weight loss versus placebo. Has GRAS status as a food additive in some contexts, not as a drug.",
+  risk:"Generally well tolerated in trials, but it simply didn't work for its intended purpose — a useful reminder that a clean safety profile isn't the same as efficacy.",
+  cite:"Metabolic Pharmaceuticals obesity trials."},
+
+ {n:"GHRP-6",aka:"Growth Hormone Releasing Peptide-6",cat:"Growth hormone",ev:"Preliminary",reg:"Research chemical — not approved",
+  mech:"Ghrelin-receptor agonist that stimulates GH release and strongly increases appetite.",
+  res:"Reliably raises GH acutely in studies; used as a research tool. Long-term human outcome/safety data are limited.",
+  risk:"Marked appetite increase, cortisol/prolactin effects, water retention. Unregulated sourcing.",
+  cite:"GH secretagogue literature."},
+
+ {n:"Hexarelin",aka:"—",cat:"Growth hormone",ev:"Preliminary",reg:"Research chemical — not approved",
+  mech:"Potent GH secretagogue (ghrelin-receptor agonist) with additional cardiovascular signaling of research interest.",
+  res:"Strong acute GH release in studies; potential desensitization with continued use. Human outcome data limited.",
+  risk:"Possible cortisol/prolactin elevation and receptor desensitization; long-term safety unknown.",
+  cite:"GH secretagogue and cardiovascular literature."},
+
+ {n:"Kisspeptin",aka:"Kisspeptin-10 / -54",cat:"Sexual health",ev:"Moderate",reg:"Investigational (research use)",
+  mech:"Upstream regulator of GnRH that governs reproductive hormone signaling (LH/FSH).",
+  res:"Active area of legitimate clinical research for fertility and hypothalamic reproductive disorders; studied under medical supervision.",
+  risk:"Studied in controlled settings; self-directed use to manipulate reproductive hormones is inadvisable.",
+  cite:"Imperial College reproductive endocrinology trials."},
+
+ {n:"DSIP",aka:"Delta Sleep-Inducing Peptide",cat:"Cognitive",ev:"Speculative",reg:"Research chemical — not approved",
+  mech:"Naturally occurring peptide historically associated with sleep regulation and stress modulation; mechanism remains poorly defined.",
+  res:"Decades-old and inconsistent research on sleep and stress; no robust modern clinical evidence supporting the marketed sleep claims.",
+  risk:"Poorly characterized; human safety data are minimal. Marketed claims outpace the evidence.",
+  cite:"Historic DSIP sleep literature."},
+
+ {n:"LL-37",aka:"Cathelicidin fragment",cat:"Healing & recovery",ev:"Preliminary",reg:"Research use — not approved",
+  mech:"Human antimicrobial peptide with roles in innate immunity, wound healing, and inflammation modulation.",
+  res:"Legitimate research interest in antimicrobial and wound applications; context-dependent effects (can be pro- or anti-inflammatory). Not a validated therapeutic in the consumer market.",
+  risk:"Immune-modulating effects are complex and dose/context dependent; self-directed use is not supported by safety data.",
+  cite:"Antimicrobial peptide / innate immunity literature."}
+];
+
+const state={ev:new Set(),cat:new Set()};
+function collect(){
+  state.ev.clear();state.cat.clear();
+  document.querySelectorAll('.chip.active').forEach(c=>{
+    if(c.dataset.ev)state.ev.add(c.dataset.ev);
+    if(c.dataset.cat)state.cat.add(c.dataset.cat.replace('&amp;','&'));
+  });
+}
+function render(){
+  collect();
+  const q=document.getElementById('search').value.trim().toLowerCase();
+  const grid=document.getElementById('grid');grid.innerHTML='';
+  let list=DATA.filter(d=>{
+    if(state.ev.size && !state.ev.has(d.ev))return false;
+    if(state.cat.size && !state.cat.has(d.cat))return false;
+    if(q){const hay=(d.n+' '+d.aka+' '+d.cat+' '+d.mech+' '+d.res).toLowerCase();if(!hay.includes(q))return false;}
+    return true;
+  });
+  const order={Approved:0,Strong:1,Moderate:2,Preliminary:3,Speculative:4};
+  list.sort((a,b)=>order[a.ev]-order[b.ev]||a.n.localeCompare(b.n));
+  document.getElementById('count').textContent=list.length+' of '+DATA.length+' peptides';
+  list.forEach((d,i)=>{
+    const idx=DATA.indexOf(d);
+    const el=document.createElement('div');el.className='card';el.onclick=()=>openModal(idx);
+    el.innerHTML=`<h3>${d.n}</h3><div class="aka">${d.aka||''}</div>
+      <span class="cat">${d.cat}</span>
+      <div class="ev ev-${d.ev}"><span class="dot"></span>${d.ev}</div>`;
+    grid.appendChild(el);
+  });
+  if(!list.length)grid.innerHTML='<div class="count">No matches — try clearing a filter.</div>';
+}
+function openModal(i){
+  const d=DATA[i];const m=document.getElementById('modal');
+  const evColor={Approved:'var(--green)',Strong:'var(--green)',Moderate:'var(--blue)',Preliminary:'var(--amber)',Speculative:'var(--red)'}[d.ev];
+  m.innerHTML=`<span class="close" onclick="closeModal()">&times;</span>
+    <h2>${d.n}</h2><div class="aka2">${d.aka||''}</div>
+    <div class="metarow">
+      <span class="tag ev" style="background:${evColor}">${d.ev} evidence</span>
+      <span class="tag">${d.cat}</span>
+      <span class="tag">${d.reg}</span>
+    </div>
+    <div class="sec"><h4>How it works</h4><p>${d.mech}</p></div>
+    <div class="sec"><h4>What the research shows</h4><p>${d.res}</p></div>
+    <div class="sec risk"><h4>Risks &amp; cautions</h4><p>${d.risk}</p></div>
+    <div class="sec"><h4>Reference</h4><p class="cite">${d.cite}</p></div>
+    <div class="sec"><p class="cite" style="margin-top:14px">Educational summary only. No dosing or usage guidance is provided. Consult a licensed medical professional.</p></div>`;
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('overlay').scrollTop=0;
+}
+render();
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
+</body>
+</html>
