@@ -137,6 +137,10 @@
   .dont-card{background:rgba(251,113,133,.06);border:1px solid rgba(251,113,133,.28);border-radius:14px;padding:14px 16px}
   .dont-card h4{margin:0 0 5px;font-size:14.5px;color:var(--red)}
   .dont-card p{margin:0;font-size:13px;color:#c7d2e3}
+  .rankb{display:inline-block;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.32);color:var(--benefit);font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;margin-right:6px}
+  .sec.td{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.28);border-radius:12px;padding:11px 14px}
+  .sec.td h4{color:var(--amber)}
+  .sec.td p{font-weight:600}
 </style>
 </head>
 <body>
@@ -231,6 +235,76 @@ function collect(){state.cat.clear();state.fav=false;document.querySelectorAll('
 const CATSHORT={'Growth hormone':'Growth','Healing & recovery':'Healing','Sexual health':'Sexual','Immune & anti-inflammatory':'Immune'};
 const POP=["Retatrutide","Tirzepatide","Semaglutide","BPC-157","TB-500","GHK-Cu","MOTS-c","Tesamorelin","CJC-1295","Ipamorelin","MK-677","Cagrilintide","Semax","Selank","NAD+","IGF-1 LR3","Follistatin","Sermorelin","PT-141","Melanotan II","5-Amino-1MQ","Epithalon","SS-31","Thymosin Beta-4","Thymosin Alpha-1","KPV","Kisspeptin","Glutathione","AOD-9604","Survodutide","Mazdutide","VK2735","Amycretin","Pemvidutide","Liraglutide","Pramlintide","Orforglipron","Tesofensine","GHRP-2","GHRP-6","Hexarelin","PEG-MGF","Gonadorelin","Melanotan I","GLOW / KLOW Blend","Humanin","ARA-290","LL-37","DSIP","Oxytocin","VIP","Dihexa","Cerebrolysin","Pinealon","Vesugen","Thymogen","Argireline","Matrixyl","SNAP-8","Exenatide","Dulaglutide","Larazotide","Davunetide","Adipotide","FOXO4-DRI","P021","SLU-PP-332","BRP"];
 function popIdx(n){var k=POP.indexOf(n);return k<0?999:k;}
+const STARTDOSE={
+"Retatrutide":"2 mg/week &rarr; 12 mg/week (raise every 4 weeks)",
+"Tirzepatide":"2.5 mg/week &rarr; 15 mg/week",
+"Semaglutide":"0.25 mg/week &rarr; 2.4 mg/week",
+"Cagrilintide":"0.25 mg/week &rarr; 2.4 mg/week",
+"Survodutide":"low start &rarr; titrated over ~20 weeks (investigational)",
+"Mazdutide":"low start &rarr; titrated in trials (investigational)",
+"Liraglutide":"0.6 mg/day &rarr; 3.0 mg/day",
+"AOD-9604":"~300 mcg/day (fixed)",
+"Adipotide":"no safe human dose established",
+"Pramlintide":"15 mcg/meal &rarr; 120 mcg/meal",
+"Exenatide":"5 mcg twice daily &rarr; 10 mcg twice daily",
+"Dulaglutide":"0.75 mg/week &rarr; 4.5 mg/week",
+"Orforglipron":"~3 mg/day &rarr; ~36 mg/day (oral, trials)",
+"Tesofensine":"0.25 mg/day &rarr; 0.5 mg/day (oral)",
+"VK2735":"low start &rarr; titrated (investigational)",
+"Amycretin":"low start &rarr; titrated (investigational)",
+"Pemvidutide":"low start &rarr; titrated (investigational)",
+"BRP":"not established (research-stage)",
+"Tesamorelin":"1 mg/day &rarr; 2 mg/day (evening)",
+"Sermorelin":"100 mcg &rarr; 300 mcg before bed",
+"CJC-1295":"100 mcg before bed (stays flat)",
+"Ipamorelin":"100 mcg &rarr; 200&ndash;300 mcg before bed",
+"MK-677":"10 mg &rarr; 25 mg nightly (oral)",
+"GHRP-6":"100 mcg &rarr; 300 mcg, up to 3x/day",
+"GHRP-2":"100 mcg &rarr; 300 mcg, up to 3x/day",
+"Hexarelin":"100 mcg &rarr; 200 mcg, 1&ndash;2x/day (short cycles)",
+"IGF-1 LR3":"20 mcg/day &rarr; 40&ndash;50 mcg/day",
+"PEG-MGF":"200 mcg &rarr; 400 mcg post-workout, 2&ndash;3x/week",
+"Follistatin":"100 mcg/day (10&ndash;30 day cycle, fixed)",
+"BPC-157":"250 mcg/day &rarr; 500 mcg/day",
+"TB-500":"2&ndash;2.5 mg twice weekly (load) &rarr; 2 mg/week",
+"Thymosin Beta-4":"2 mg twice weekly &rarr; 2 mg/week",
+"GHK-Cu":"1 mg/day &rarr; 2 mg/day",
+"KPV":"250 mcg/day &rarr; 500 mcg/day",
+"ARA-290":"~1 mg/day &rarr; ~4 mg/day",
+"Thymosin Alpha-1":"300 mcg/day &rarr; 500 mcg/day (or 1.6 mg twice weekly)",
+"LL-37":"100 mcg &rarr; 500 mcg (narrow safety window)",
+"VIP":"compounded nasal spray, dose varies",
+"Semax":"300 mcg &rarr; 600 mcg intranasal, 1&ndash;2x/day",
+"Selank":"250 mcg &rarr; 500 mcg intranasal, 1&ndash;2x/day",
+"Dihexa":"not established (research-stage)",
+"DSIP":"100 mcg &rarr; 300 mcg before bed",
+"Oxytocin":"pre-made nasal spray, dose varies",
+"PT-141":"0.5 mg &rarr; 2 mg (before activity)",
+"Melanotan II":"0.25 mg &rarr; 1 mg",
+"Melanotan I":"~0.5 mg/day (afamelanotide)",
+"Kisspeptin":"clinician-set, titrated",
+"MOTS-c":"5 mg/week &rarr; 10 mg/week",
+"Humanin":"not established (research-stage)",
+"SS-31":"titrated (research)",
+"Epithalon":"5&ndash;10 mg/day, 10&ndash;20 day cycle",
+"Pinealon":"~10 mg/day cycle",
+"Glutathione":"600 mg &rarr; 1200&ndash;1500 mg (IV/IM)",
+"Gonadorelin":"small pulses, clinician-set",
+"Larazotide":"0.5 mg (500 mcg) before meals (oral)",
+"Cerebrolysin":"5 mL/day &rarr; 10 mL/day (IM/IV course)",
+"Thymogen":"~100 mcg/day cycle",
+"FOXO4-DRI":"not established (research-stage)",
+"Davunetide":"intranasal, investigational",
+"5-Amino-1MQ":"50 mg &rarr; 100 mg/day (oral)",
+"NAD+":"50 mg &rarr; 100 mg subQ (higher usually IV)",
+"GLOW / KLOW Blend":"reconstitute whole vial, dose by total volume",
+"Vesugen":"oral or injectable cycle",
+"P021":"not established (research-stage)",
+"SLU-PP-332":"not established (research-stage)",
+"Argireline":"topical, already formulated",
+"Matrixyl":"topical, already formulated",
+"SNAP-8":"topical, already formulated"
+};
 function render(){
   collect();
   const q=document.getElementById('search').value.trim().toLowerCase();
@@ -248,7 +322,8 @@ function render(){
     const idx=DATA.indexOf(d);
     const el=document.createElement('div');el.className='card evc-'+d.ev;el.onclick=()=>openModal(idx);
     const tags=(d.ben||[]).slice(0,3).map(b=>`<span class="bt">${b}</span>`).join('');
-    el.innerHTML=`<div class="chd"><div><h3>${d.n}</h3><div class="aka">${d.aka||''}</div></div><div class="chd-r"><button class="fav-btn${isFav(d.n)?' on':''}" title="Save to favorites">${isFav(d.n)?'\u2605':'\u2606'}</button><span class="catchip">${CATSHORT[d.cat]||d.cat}</span></div></div><div class="btags">${tags}</div><div class="ev"><span class="d" style="background:var(--ec)"></span>${d.ev} evidence</div>`;var _fb=el.querySelector(".fav-btn");if(_fb)_fb.onclick=function(e){toggleFav(d.n,e);};
+    const _rk=popIdx(d.n);const _rb=_rk<POP.length?`<span class="rankb">#${_rk+1}</span>`:'';
+    el.innerHTML=`<div class="chd"><div><h3>${_rb}${d.n}</h3><div class="aka">${d.aka||''}</div></div><div class="chd-r"><button class="fav-btn${isFav(d.n)?' on':''}" title="Save to favorites">${isFav(d.n)?'\u2605':'\u2606'}</button><span class="catchip">${CATSHORT[d.cat]||d.cat}</span></div></div><div class="btags">${tags}</div><div class="ev"><span class="d" style="background:var(--ec)"></span>${d.ev} evidence</div>`;var _fb=el.querySelector(".fav-btn");if(_fb)_fb.onclick=function(e){toggleFav(d.n,e);};
     grid.appendChild(el);
   });
   if(!list.length)grid.innerHTML='<div class="count">No matches &mdash; try clearing a filter.</div>';
@@ -261,7 +336,7 @@ function openModal(i){
   const benHero=(d.ben&&d.ben.length)?`<div class="benefit-hero"><div class="lbl">&#10022; Potential benefits</div><ul>${d.ben.map(b=>`<li>${b}</li>`).join('')}</ul></div>`:'';
   const trials=d.trials?`<div class="sec"><h4>Key clinical trials</h4><p>${d.trials}</p>${d.link?`<p style="margin-top:8px"><a href="${d.link}" target="_blank" rel="noopener">View registered trials on ClinicalTrials.gov &rarr;</a></p>`:''}</div>`:(d.link?`<div class="sec"><h4>Clinical trials</h4><p><a href="${d.link}" target="_blank" rel="noopener">Search ClinicalTrials.gov for ${d.n} &rarr;</a></p></div>`:'');
   const overview=benHero+sec('','How it works',d.mech)+sec('','What the research shows',d.res)+trials;
-  const dosing=sec('','Dosing (commonly reported)',d.dose)+sec('','Weekly total (reported)',d.weekly)+sec('','Typical cycle',d.cycle)+sec('recon','Reconstitution & handling',d.recon)+RECON_GUIDE+`<div class="disc">Dosing shown reflects what has been used in studies or reported in research communities &mdash; it is informational, not a recommendation. Many of these are unapproved for human use.</div>`;
+  const dosing=sec('td','Starting dose &rarr; target',STARTDOSE[d.n])+sec('','Dosing (commonly reported)',d.dose)+sec('','Weekly total (reported)',d.weekly)+sec('','Typical cycle',d.cycle)+sec('recon','Reconstitution & handling',d.recon)+RECON_GUIDE+`<div class="disc">Dosing shown reflects what has been used in studies or reported in research communities &mdash; it is informational, not a recommendation. Many of these are unapproved for human use.</div>`;
   const stacks=sec('','Commonly stacked with',d.combos)+sec('','Studied combinations',d.stack)+sec('avoid','Combinations & cautions to avoid',d.avoid);
   const safety=sec('','Common side effects',d.sides)+sec('risk','Risks & cautions',d.risk)+sec('','Reference',d.cite);
   document.getElementById('modal').innerHTML=`
