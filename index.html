@@ -115,22 +115,6 @@
 </head>
 <body>
 
-<div class="gate" id="gate">
-  <div class="box">
-    <h2>Before you enter</h2>
-    <p>This is an <strong>educational reference library</strong> summarizing published research on peptides. By continuing you acknowledge:</p>
-    <ul>
-      <li>This is <strong>not medical advice</strong> and not a recommendation to use any substance.</li>
-      <li>Any dosing, cycle, or reconstitution details reflect <strong>what has been used or reported in research</strong> &mdash; not a prescription or endorsement.</li>
-      <li>Many peptides listed are <strong>research chemicals not approved for human use</strong>, and some carry serious risks.</li>
-      <li>Always consult a licensed medical professional before making any health decision.</li>
-      <li>You are 18 years of age or older.</li>
-    </ul>
-    <button onclick="enter()">I understand &mdash; enter the library</button>
-    <button class="decline" onclick="location.href='https://www.fda.gov'">Take me elsewhere</button>
-  </div>
-</div>
-
 <header class="top"><div class="wrap">
   <h1>PepTalk</h1>
   <div class="sub">Your easy peptide reference &mdash; potential benefits, dosing, reconstitution, stacks &amp; safety.</div>
@@ -181,7 +165,6 @@
 
 
 <script>
-function enter(){document.getElementById('gate').style.display='none';}
 function tog(el,type){el.classList.toggle('active');render();}
 function closeModal(){document.getElementById('overlay').classList.remove('show');}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
