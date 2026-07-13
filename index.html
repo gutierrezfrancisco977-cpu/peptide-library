@@ -117,6 +117,8 @@
   .stacks-intro{color:var(--mut);font-size:14px;max-width:760px;margin:18px auto 20px;text-align:center}
   .stack-grid,.dont-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;margin-bottom:34px}
   .stack-card{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:16px;padding:18px}
+  .stack-pop{display:inline-flex;align-items:center;gap:6px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.32);color:var(--benefit);font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;margin-bottom:10px;letter-spacing:.2px}
+  .stack-pop .rk{color:var(--dim);font-weight:800}
   .stack-card h3{margin:0 0 4px;font-size:18px;color:var(--ink)}
   .stack-goal{color:var(--accent2);font-size:12.5px;font-weight:600;margin-bottom:12px}
   .stack-peps{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
@@ -199,7 +201,7 @@
 </div>
 
 <div class="wrap" id="stacksView" style="display:none">
-  <p class="stacks-intro">Popular, trending peptide stacks &mdash; and how the pieces complement each other. Educational only; the synergy below is mostly mechanistic, not proven in human trials.</p>
+  <p class="stacks-intro">Peptide stacks <b>ranked most popular &rarr; least</b> (based on what's trending across TikTok, Reddit &amp; peptide communities) &mdash; with how the pieces complement each other. Educational only; the synergy below is mostly mechanistic, not proven in human trials.</p>
   <div class="stack-grid" id="stackGrid"></div>
   <div class="dont-head">&#9888; Do NOT stack these</div>
   <p class="stacks-intro" style="margin-top:2px">Combining peptides that hit the same target usually adds side effects, not benefits.</p>
@@ -280,37 +282,65 @@ function openModal(i){
 function mtab(btn,i){const m=btn.closest('.modal');m.querySelectorAll('.tab').forEach((t,k)=>t.classList.toggle('on',k===i));m.querySelectorAll('.panel').forEach((p,k)=>p.classList.toggle('on',k===i));document.getElementById('overlay').scrollTop=0;}
 
 const STACKS=[
- {n:"Triple Metabolic Stack",goal:"Fat loss while defending lean mass",peps:["Retatrutide","MOTS-c","Tesamorelin"],
+ {n:"Lean Recomp Stack",pop:"Most popular",goal:"GLP-1 fat loss without muscle loss",peps:["Retatrutide or Semaglutide","CJC-1295","Ipamorelin"],
+  why:["<b>GLP-1 (Reta / Sema)</b> — drives the fat loss and appetite control.",
+       "<b>CJC-1295 + Ipamorelin</b> — keep growth hormone up, which otherwise plummets in a calorie deficit, so you hold muscle."],
+  syn:"GLP-1 works on a completely separate receptor from the GH secretagogues (ghrelin pathway), so they are mechanistically compatible — fat comes off while lean mass is defended. This is the #1 trending weight-loss pairing.",
+  note:"Popular online; combination not studied in a formal trial."},
+ {n:"GH Base Stack",pop:"Very popular",goal:"Sleep, recovery & body composition",peps:["CJC-1295","Ipamorelin"],
+  why:["<b>CJC-1295</b> — GHRH analog. Raises the baseline growth-hormone level.",
+       "<b>Ipamorelin</b> — ghrelin-receptor agonist. Adds a clean GH pulse with minimal cortisol or prolactin."],
+  syn:"The classic starter stack and the most widely used pair in the compounding world: the two act on two different receptors that amplify each other, giving a bigger, more natural GH pulse than either alone. The right kind of pairing — different mechanisms, not two of the same.",
+  note:"Well-established combo in research communities; still off-label."},
+ {n:"Wolverine Recovery Stack",pop:"Very popular",goal:"Injury, tendon & tissue repair",peps:["BPC-157","TB-500"],
+  why:["<b>BPC-157</b> — drives localized healing, angiogenesis, and gut/tendon repair.",
+       "<b>TB-500</b> — works more systemically: cell migration, angiogenesis, and lowering inflammation."],
+  syn:"They heal through complementary pathways (angiogenesis vs. cell migration) and do not interfere, which is why it is the most popular recovery pairing. Usually run 8–12 weeks around an acute injury.",
+  note:"Largely experimental; FDA has flagged both — hype currently outruns human evidence."},
+ {n:"Reta + Tesamorelin",pop:"Popular",goal:"Aggressive fat loss, muscle preserved",peps:["Retatrutide or Semaglutide","Tesamorelin"],
+  why:["<b>Retatrutide / Semaglutide</b> — triple- or single-agonist fat loss and appetite control across the whole body.",
+       "<b>Tesamorelin</b> — GH stimulation that preferentially strips visceral fat and holds onto lean mass during the deficit."],
+  syn:"Often called the most powerful fat-loss pair: one drives overall fat loss, the other targets stubborn visceral belly fat and protects muscle. Different receptors, so they add up rather than overlap.",
+  note:"Trending for body-recomp; no combined human trial exists."},
+ {n:"Triple Metabolic Stack",pop:"Trending",goal:"Fat loss while defending lean mass",peps:["Retatrutide","MOTS-c","Tesamorelin"],
   why:["<b>Retatrutide</b> — triple agonist (GLP-1 / GIP / glucagon). Cuts appetite, and its glucagon arm actively mobilizes stored fat, including from the liver.",
        "<b>MOTS-c</b> — mitochondrial peptide. Restores the cells' ability to run on fat, improves insulin sensitivity, and fights the fatigue and metabolic slow-down that stalls a cut.",
        "<b>Tesamorelin</b> — GHRH analog. A growth-hormone pulse that targets visceral (belly) fat and defends muscle, so the deficit costs fat, not lean mass."],
   syn:"Three different pathways with little overlap: Retatrutide drives the deficit, MOTS-c keeps the engine burning fat, and Tesamorelin protects muscle while hitting visceral fat. That is why the trend pairs these three instead of stacking more of the same.",
   note:"No human trial has tested this exact combination — the synergy is mechanistic."},
- {n:"Reta + Tesamorelin",goal:"Aggressive fat loss, muscle preserved",peps:["Retatrutide","Tesamorelin"],
-  why:["<b>Retatrutide</b> — triple-agonist fat loss and appetite control across the whole body.",
-       "<b>Tesamorelin</b> — GH stimulation that preferentially strips visceral fat and holds onto lean mass during the deficit."],
-  syn:"A two-part version of the metabolic stack: one drives overall fat loss, the other protects muscle and targets stubborn belly fat. Different receptors, so they add up rather than overlap.",
-  note:"Trending for body-recomp; no combined human trial exists."},
- {n:"GH Base Stack",goal:"Sleep, recovery & body composition",peps:["CJC-1295","Ipamorelin"],
-  why:["<b>CJC-1295</b> — GHRH analog. Raises the baseline growth-hormone level.",
-       "<b>Ipamorelin</b> — ghrelin-receptor agonist. Adds a clean GH pulse with minimal cortisol or prolactin."],
-  syn:"The classic starter stack: the two act on two different receptors that amplify each other, giving a bigger, more natural GH pulse than either alone. This is the right kind of pairing — different mechanisms, not two of the same.",
-  note:"Well-established combo in research communities; still off-label."},
- {n:"Wolverine Recovery Stack",goal:"Injury, tendon & tissue repair",peps:["BPC-157","TB-500"],
-  why:["<b>BPC-157</b> — drives localized healing, angiogenesis, and gut/tendon repair.",
-       "<b>TB-500</b> — works more systemically: cell migration, angiogenesis, and lowering inflammation."],
-  syn:"They heal through complementary pathways (angiogenesis vs. cell migration) and do not interfere, which is why it is the most popular recovery pairing. Usually run 8–12 weeks around an acute injury.",
-  note:"Largely experimental; FDA has flagged both — hype currently outruns human evidence."},
- {n:"Lean Recomp Stack",goal:"GLP-1 fat loss without muscle loss",peps:["Retatrutide or Semaglutide","CJC-1295","Ipamorelin"],
-  why:["<b>GLP-1 (Reta / Sema)</b> — drives the fat loss and appetite control.",
-       "<b>CJC-1295 + Ipamorelin</b> — keep growth hormone up, which otherwise plummets in a calorie deficit, so you hold muscle."],
-  syn:"GLP-1 works on a completely separate receptor from the GH secretagogues (ghrelin pathway), so they are mechanistically compatible — fat comes off while lean mass is defended. This is the trending weight-loss pairing.",
-  note:"Popular online; combination not studied in a formal trial."},
- {n:"Glow / Aesthetics Stack",goal:"Skin, collagen & tissue quality",peps:["GHK-Cu","BPC-157"],
-  why:["<b>GHK-Cu</b> — copper peptide that stimulates collagen and elastin, firms skin, and softens fine lines.",
-       "<b>BPC-157</b> — supports the connective-tissue repair that underlies healthy skin."],
-  syn:"Collagen synthesis plus tissue repair — the aesthetic angle of the recovery trend. Often sold pre-mixed as a GLOW / KLOW blend.",
-  note:"Cosmetic/repair claims are largely preclinical."}
+ {n:"Next-Gen Weight Loss (CagriSema-style)",pop:"Trending / new",goal:"Deeper appetite control than GLP-1 alone",peps:["Retatrutide or Semaglutide","Cagrilintide"],
+  why:["<b>GLP-1 (Reta / Sema)</b> — the main fat-loss and appetite driver.",
+       "<b>Cagrilintide</b> — an amylin analog that boosts satiety through a <i>different</i> hunger hormone, so you feel full sooner and longer."],
+  syn:"Two different appetite systems (GLP-1 + amylin) instead of doubling up on one. In trials, adding cagrilintide to semaglutide (CagriSema) pushed average weight loss from ~15% to ~20%. Reta + cagrilintide is the newer, stronger DIY version.",
+  note:"Investigational; the combinations are not FDA-approved and Reta+Cagri has no published trial."},
+ {n:"KLOW Skin & Recovery Stack",pop:"Popular",goal:"Skin, collagen & full-body repair",peps:["GHK-Cu","BPC-157","TB-500","KPV"],
+  why:["<b>GHK-Cu</b> — copper peptide: collagen, elastin, firmer skin, fewer fine lines.",
+       "<b>BPC-157</b> — localized tissue and gut repair.",
+       "<b>TB-500</b> — systemic cell migration and angiogenesis.",
+       "<b>KPV</b> — calms inflammation, which speeds and cleans up the repair."],
+  syn:"Each hits a different phase of repair — rebuild (GHK-Cu), local fix (BPC-157), remodeling (TB-500) and cooling inflammation (KPV). Sold pre-mixed as the GLOW (3-part) or KLOW (4-part) blend.",
+  note:"Cosmetic/repair claims are largely preclinical."},
+ {n:"Russian Nootropic Stack",pop:"Popular (cognitive)",goal:"Focus, mood & calm",peps:["Semax","Selank"],
+  why:["<b>Semax</b> — the activator: raises BDNF and dopamine for focus, drive and neuroprotection.",
+       "<b>Selank</b> — the stabilizer: boosts calming GABA and steadies serotonin, easing anxiety without fog."],
+  syn:"One pushes performance, the other keeps you calm — so you get sharper focus without the jitters. Common approach: Semax in the morning/early afternoon, Selank morning and evening.",
+  note:"Approved in Russia, not FDA-approved. Usually nasal sprays."},
+ {n:"Tesamorelin + Ipamorelin",pop:"Popular (GH)",goal:"Visceral fat + clean GH pulse",peps:["Tesamorelin","Ipamorelin"],
+  why:["<b>Tesamorelin</b> — the stronger GHRH, best known for cutting visceral (belly) fat.",
+       "<b>Ipamorelin</b> — a clean ghrelin-receptor pulse with little cortisol or prolactin."],
+  syn:"Same GHRH + GHRP logic as the GH base stack, but Tesamorelin leans it toward visceral-fat loss. Two receptors that amplify each other for a bigger, cleaner GH release.",
+  note:"Off-label; the pairing itself is not formally trialed."},
+ {n:"Longevity Stack",pop:"Niche / biohacker",goal:"Cellular energy, sleep & aging",peps:["Epithalon","MOTS-c","NAD+"],
+  why:["<b>Epithalon</b> — supports telomere/telomerase activity and resets circadian sleep rhythm.",
+       "<b>MOTS-c</b> — mitochondrial peptide for metabolism and exercise-like signaling.",
+       "<b>NAD+</b> — the cofactor behind cellular energy and DNA repair."],
+  syn:"Three separate longevity levers — telomeres/sleep, mitochondria, and cellular energy — that do not overlap, which is why biohackers combine rather than double up.",
+  note:"Longevity claims are early and mostly preclinical/anecdotal."},
+ {n:"Immune & Gut Stack",pop:"Niche",goal:"Gut lining repair + immune support",peps:["BPC-157","Thymosin Alpha-1"],
+  why:["<b>BPC-157</b> — repairs the gut lining and calms GI inflammation.",
+       "<b>Thymosin Alpha-1</b> — modulates and strengthens the immune system."],
+  syn:"Gut repair plus immune tuning — a common pairing for people recovering gut health while supporting immunity. Two different jobs, so they complement rather than overlap.",
+  note:"Thymosin Alpha-1 is approved in some countries; BPC-157 is not. Largely experimental together."}
 ];
 const DONT=[
  {h:"Two GLP-1 drugs at once",p:"e.g. semaglutide + tirzepatide, or retatrutide + semaglutide. Same pathway, so you pile on the side effects (nausea, dehydration, muscle loss) with no added benefit. Pick one."},
@@ -321,7 +351,7 @@ const DONT=[
  {h:"The general rule",p:"Don't stack two peptides that hit the same receptor or clearance pathway. Redundancy means more side effects, not more results."}
 ];
 function buildStacks(){
-  document.getElementById('stackGrid').innerHTML=STACKS.map(s=>`<div class="stack-card"><h3>${s.n}</h3><div class="stack-goal">${s.goal}</div><div class="stack-peps">${s.peps.map(p=>`<span>${p}</span>`).join('')}</div><div class="stack-why"><h4>How they complement each other</h4><ul>${s.why.map(w=>`<li>${w}</li>`).join('')}</ul><div class="stack-syn">${s.syn}</div><div class="stack-note">${s.note}</div></div></div>`).join('');
+  document.getElementById('stackGrid').innerHTML=STACKS.map((s,i)=>`<div class="stack-card"><div class="stack-pop"><span class="rk">#${i+1}</span> ${s.pop}</div><h3>${s.n}</h3><div class="stack-goal">${s.goal}</div><div class="stack-peps">${s.peps.map(p=>`<span>${p}</span>`).join('')}</div><div class="stack-why"><h4>How they complement each other</h4><ul>${s.why.map(w=>`<li>${w}</li>`).join('')}</ul><div class="stack-syn">${s.syn}</div><div class="stack-note">${s.note}</div></div></div>`).join('');
   document.getElementById('dontGrid').innerHTML=DONT.map(d=>`<div class="dont-card"><h4>${d.h}</h4><p>${d.p}</p></div>`).join('');
 }
 function showView(v){
