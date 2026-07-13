@@ -169,6 +169,23 @@
   .viewnav .vbtn.on{background:linear-gradient(92deg,var(--violet),var(--cyan));box-shadow:0 6px 18px rgba(34,211,238,.25)}
   /* recon tip */
   .rgtip{background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.22);border-radius:10px;padding:10px 12px;font-size:13px;margin-top:6px}
+  /* overview stat strip + evidence ring */
+  .ovstat{display:flex;align-items:center;gap:18px;background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:16px;flex-wrap:wrap}
+  .ring{position:relative;flex:none;width:86px;height:86px}
+  .ringn{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+  .ringn b{font-size:12.5px;color:var(--ink);font-weight:700;line-height:1.05}
+  .ringn span{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+  .ovpills{display:flex;flex-wrap:wrap;gap:8px;flex:1;min-width:180px}
+  .opill{background:var(--bg);border:1px solid var(--line2);border-radius:10px;padding:7px 11px;font-size:12.5px;color:var(--ink);font-weight:600}
+  .opill span{display:block;font-size:9.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:2px}
+  /* dosing timeline */
+  .tl{margin:8px 0 2px;padding-left:4px}
+  .tlrow{position:relative;padding:0 0 15px 22px}
+  .tlrow::before{content:"";position:absolute;left:5px;top:13px;bottom:-2px;width:2px;background:linear-gradient(180deg,var(--cyan),var(--violet))}
+  .tlrow:last-child::before{display:none}
+  .tld{position:absolute;left:0;top:3px;width:12px;height:12px;border-radius:50%;background:var(--card);border:2px solid var(--cyan);box-shadow:0 0 8px rgba(34,211,238,.5)}
+  .tld.end{border-color:var(--violet);background:var(--violet);box-shadow:0 0 10px rgba(167,139,250,.6)}
+  .tll{font-size:13px;color:#c7d2e3;padding-top:1px}
   @media(max-width:560px){header.top h1{font-size:30px}.brand{gap:11px}.logo-mark{width:42px;height:42px}}
 </style>
 </head>
@@ -427,6 +444,41 @@ const COMBOS={
 "Matrixyl":"Argireline + SNAP-8 (topical anti-aging serum blend), GHK-Cu",
 "SNAP-8":"Argireline + Matrixyl (topical wrinkle blend)"
 };
+const HL={
+"Retatrutide":"~6 days","Tirzepatide":"~5 days","Semaglutide":"~7 days","Cagrilintide":"~7&ndash;9 days",
+"Liraglutide":"~13 hours","Dulaglutide":"~5 days","Exenatide":"~2.4 hours","Pramlintide":"~48 min",
+"Tesamorelin":"~26&ndash;38 min","Sermorelin":"~10&ndash;20 min","CJC-1295":"~30 min (no DAC)","Ipamorelin":"~2 hours",
+"MK-677":"~24 hours","GHRP-6":"~15&ndash;60 min","GHRP-2":"~15&ndash;60 min","Hexarelin":"~55 min",
+"IGF-1 LR3":"~20&ndash;30 hours","PEG-MGF":"~48&ndash;72 hours","Follistatin":"short (hours)",
+"BPC-157":"~4 hours","TB-500":"~2&ndash;3 days","Thymosin Beta-4":"~2 days","GHK-Cu":"short",
+"KPV":"short","Thymosin Alpha-1":"~2 hours","MOTS-c":"short","Epithalon":"short",
+"NAD+":"short","Glutathione":"short","PT-141":"~2&ndash;3 hours","Melanotan II":"~1&ndash;2 hours",
+"Semax":"minutes (nasal)","Selank":"minutes (nasal)","DSIP":"short","Kisspeptin":"~28 min",
+"5-Amino-1MQ":"hours (oral)","AOD-9604":"short"
+};
+function evFrac(ev){return {Approved:.92,Strong:.88,Moderate:.68,Preliminary:.45,Speculative:.28}[ev]||.5;}
+function evCol(ev){return {Approved:'#34d399',Strong:'#34d399',Moderate:'#38bdf8',Preliminary:'#fbbf24',Speculative:'#fb7185'}[ev]||'#38bdf8';}
+function ovStrip(d){
+  var f=evFrac(d.ev),C=2*Math.PI*26,off=C*(1-f);
+  var pills='';
+  if(HL[d.n])pills+='<div class="opill"><span>Half-life</span>'+HL[d.n]+'</div>';
+  pills+='<div class="opill"><span>Category</span>'+d.cat+'</div>';
+  pills+='<div class="opill"><span>Status</span>'+(d.reg||'&mdash;')+'</div>';
+  return '<div class="ovstat"><div class="ring"><svg viewBox="0 0 64 64" width="86" height="86">'
+    +'<circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="7"/>'
+    +'<circle cx="32" cy="32" r="26" fill="none" stroke="'+evCol(d.ev)+'" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+C+'" stroke-dashoffset="'+off+'" transform="rotate(-90 32 32)"/>'
+    +'</svg><div class="ringn"><b>'+d.ev+'</b><span>evidence</span></div></div>'
+    +'<div class="ovpills">'+pills+'</div></div>';
+}
+function doseTimeline(d){
+  var s=STARTDOSE[d.n]||'';
+  var parts=s.split('&rarr;').map(function(x){return x.trim();}).filter(Boolean);
+  if(parts.length<2)return '';
+  return '<div class="tl">'+parts.map(function(p,i){
+    var lab=i===0?p:(i===parts.length-1?'Target: '+p:'Then: '+p);
+    return '<div class="tlrow"><span class="tld'+(i===parts.length-1?' end':'')+'"></span><div class="tll">'+lab+'</div></div>';
+  }).join('')+'</div>';
+}
 function render(){
   collect();
   const q=document.getElementById('search').value.trim().toLowerCase();
@@ -456,9 +508,10 @@ function openModal(i){
   const evColor={Approved:'var(--green)',Strong:'var(--green)',Moderate:'var(--blue)',Preliminary:'var(--amber)',Speculative:'var(--red)'}[d.ev];
   const benHero=(d.ben&&d.ben.length)?`<div class="benefit-hero"><div class="lbl">&#10022; Potential benefits</div><ul>${d.ben.map(b=>`<li>${b}</li>`).join('')}</ul></div>`:'';
   const trials=d.trials?`<div class="sec"><h4>Key clinical trials</h4><p>${d.trials}</p>${d.link?`<p style="margin-top:8px"><a href="${d.link}" target="_blank" rel="noopener">View registered trials on ClinicalTrials.gov &rarr;</a></p>`:''}</div>`:(d.link?`<div class="sec"><h4>Clinical trials</h4><p><a href="${d.link}" target="_blank" rel="noopener">Search ClinicalTrials.gov for ${d.n} &rarr;</a></p></div>`:'');
-  const overview=benHero+sec('','How it works',d.mech)+sec('','What the research shows',d.res)+trials;
+  const overview=ovStrip(d)+benHero+sec('','How it works',d.mech)+sec('','What the research shows',d.res)+trials;
   var _sd=STARTDOSE[d.n]||'';var _sdnote=(_sd.indexOf('Week 1')>=0)?'<div class="stack-note" style="margin:-4px 0 12px">Week 1 is a conservative ~half dose to check tolerance, then step up.</div>':'';
-  const dosing=sec('td','Conservative ramp &mdash; week 1 &rarr; target',_sd)+_sdnote+sec('','Dosing (commonly reported)',d.dose)+sec('','Weekly total (reported)',d.weekly)+sec('','Typical cycle',d.cycle)+sec('recon','Reconstitution & handling',d.recon)+RECON_GUIDE+`<div class="disc">Dosing shown reflects what has been used in studies or reported in research communities &mdash; it is informational, not a recommendation. Many of these are unapproved for human use.</div>`;
+  var _tl=doseTimeline(d);var _tlsec=_tl?'<div class="sec"><h4>Dosing timeline (example)</h4>'+_tl+'</div>':'';
+  const dosing=sec('td','Conservative ramp &mdash; week 1 &rarr; target',_sd)+_sdnote+_tlsec+sec('','Dosing (commonly reported)',d.dose)+sec('','Weekly total (reported)',d.weekly)+sec('','Typical cycle',d.cycle)+sec('recon','Reconstitution & handling',d.recon)+RECON_GUIDE+`<div class="disc">Dosing shown reflects what has been used in studies or reported in research communities &mdash; it is informational, not a recommendation. Many of these are unapproved for human use.</div>`;
   const stacks=sec('','Commonly stacked with',COMBOS[d.n]||d.combos)+sec('','Studied combinations',d.stack)+sec('avoid','Combinations & cautions to avoid',d.avoid);
   const safety=sec('','Common side effects',d.sides)+sec('risk','Risks & cautions',d.risk)+sec('','Reference',d.cite);
   document.getElementById('modal').innerHTML=`
