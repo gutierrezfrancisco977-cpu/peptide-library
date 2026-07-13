@@ -204,11 +204,48 @@
   .bn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .bn:hover,.bn.on{color:var(--cyan)}
   body{padding-bottom:72px}
+  /* molecules */
+  .mol{display:block;width:100%;height:100%;overflow:visible}
+  .molb line{stroke:rgba(120,180,255,.32);stroke-width:1}
+  .mold circle{fill:url(#molg)}
+  @keyframes molfloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-7px) rotate(2deg)}}
+  .hero-mol .mol{animation:molfloat 7s ease-in-out infinite}
+  .cardmol{position:absolute;top:-8px;right:-8px;width:96px;height:96px;opacity:.42;pointer-events:none}
+  .tp-mol{width:36px;height:36px;display:block}
+  /* top peptides row */
+  .toppeps{margin:2px 0 20px}
+  .tp-lbl{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;color:var(--dim);font-weight:800;margin:0 0 11px}
+  .tp-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:5px;scrollbar-width:thin}
+  .tp{flex:none;display:flex;flex-direction:column;align-items:center;gap:5px;width:84px;background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:14px;padding:10px 6px;cursor:pointer;font-family:inherit;transition:border-color .15s,transform .15s,box-shadow .15s}
+  .tp:hover{transform:translateY(-2px)}
+  .tp.on{border-color:var(--cyan);box-shadow:0 0 0 1px rgba(34,211,238,.3),0 8px 22px rgba(34,211,238,.14)}
+  .tp-num{font-size:10px;font-weight:800;color:var(--cyan);letter-spacing:.5px}
+  .tp-nm{font-size:11px;font-weight:600;color:var(--ink);text-align:center;line-height:1.15}
+  /* hero feature card */
+  .hero{margin-bottom:24px}
+  .hero-card{display:flex;gap:24px;align-items:center;background:linear-gradient(135deg,#0e1728,#0b1120 58%,#100b22);border:1px solid var(--line2);border-radius:20px;padding:24px;position:relative;overflow:hidden}
+  .hero-card::after{content:"";position:absolute;inset:0;background:radial-gradient(420px 250px at 20% 28%,rgba(34,211,238,.17),transparent 60%),radial-gradient(380px 230px at 82% 82%,rgba(167,139,250,.15),transparent 60%);pointer-events:none}
+  .hero-mol{position:relative;flex:none;width:250px;height:250px;display:flex;align-items:center;justify-content:center;z-index:1}
+  .hero-num{position:absolute;top:0;left:2px;font-size:40px;font-weight:800;color:rgba(255,255,255,.09);letter-spacing:-1px;z-index:-1}
+  .hero-info{flex:1;min-width:0;position:relative;z-index:1}
+  .hero-cat{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--cyan);font-weight:800}
+  .hero-info h2{margin:7px 0 4px;font-size:30px;font-weight:800;letter-spacing:-.8px;color:var(--ink)}
+  .hero-aka{color:var(--mut);font-size:13.5px;margin-bottom:15px}
+  .hero-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:15px}
+  .hero-benhex{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:17px;max-width:440px}
+  .hextile.sm{padding:10px 5px;gap:6px}
+  .hextile.sm .hextxt{font-size:10px}
+  .hero-btn{background:linear-gradient(92deg,var(--violet),var(--cyan));color:#05080f;border:none;font-weight:700;font-size:14px;padding:11px 22px;border-radius:12px;cursor:pointer;font-family:inherit;box-shadow:0 8px 22px rgba(34,211,238,.25)}
+  @media(max-width:720px){.hero-card{flex-direction:column;align-items:center;text-align:center}.hero-mol{width:200px;height:200px}.hero-pills,.hero-benhex{justify-content:center}.hero-benhex{grid-template-columns:repeat(2,1fr);max-width:280px;margin-left:auto;margin-right:auto}}
   @media(max-width:560px){header.top h1{font-size:30px}.brand{gap:11px}.logo-mark{width:42px;height:42px}}
 </style>
 </head>
 <body>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <radialGradient id="molg" cx="0.4" cy="0.34" r="0.75"><stop offset="0" stop-color="#8ff4ff"/><stop offset="0.5" stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></radialGradient>
+  <filter id="molglow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1.7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs></svg>
 <div class="gate" id="gate">
   <div class="box">
     <h2>Before you enter</h2>
@@ -290,6 +327,8 @@
 </div></div>
 
 <div class="wrap" id="pepView">
+  <div class="toppeps" id="toppeps"></div>
+  <div class="hero" id="hero"></div>
   <div class="count" id="count"></div>
   <div class="grid" id="grid"></div>
 </div>
@@ -529,6 +568,39 @@ function benGrid(d){
 }
 function botFav(){showView('pep');var c=document.querySelector('.fav-chip');if(c&&!c.classList.contains('active'))c.classList.add('active');render();window.scrollTo(0,0);}
 function botSearch(){showView('pep');window.scrollTo(0,0);var s=document.getElementById('search');if(s)s.focus();}
+function _seed(str){var h=2166136261;for(var i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}return h||7;}
+function _rng(s){return function(){s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296;};}
+function molSVG(name,cls){
+  var r=_rng(_seed(name));
+  var n=8+Math.floor(r()*4),pts=[],i;
+  for(i=0;i<n;i++){pts.push([14+r()*72,14+r()*72]);}
+  var bonds='';
+  for(i=0;i<n;i++){var j=(i+1)%n;bonds+='<line x1="'+pts[i][0].toFixed(1)+'" y1="'+pts[i][1].toFixed(1)+'" x2="'+pts[j][0].toFixed(1)+'" y2="'+pts[j][1].toFixed(1)+'"/>';}
+  for(var k=0;k<Math.floor(n/3);k++){var a=Math.floor(r()*n),b=Math.floor(r()*n);if(a!==b)bonds+='<line x1="'+pts[a][0].toFixed(1)+'" y1="'+pts[a][1].toFixed(1)+'" x2="'+pts[b][0].toFixed(1)+'" y2="'+pts[b][1].toFixed(1)+'"/>';}
+  var dots='';for(i=0;i<n;i++){dots+='<circle cx="'+pts[i][0].toFixed(1)+'" cy="'+pts[i][1].toFixed(1)+'" r="'+(2.4+r()*2.8).toFixed(1)+'"/>';}
+  var flt=(cls==='hero')?' filter="url(#molglow)"':'';
+  return '<svg class="mol '+(cls||'')+'" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="molb">'+bonds+'</g><g class="mold"'+flt+'>'+dots+'</g></svg>';
+}
+var POPSORTED=DATA.slice().sort(function(a,b){return popIdx(a.n)-popIdx(b.n);});
+var featIdx=DATA.indexOf(POPSORTED[0]);
+function renderHero(idx){
+  var d=DATA[idx];if(!d)return;
+  var rank=popIdx(d.n),num=rank<POP.length?('0'+(rank+1)).slice(-2):'';
+  var pills='';
+  if(HL[d.n])pills+='<div class="opill"><span>Half-life</span>'+HL[d.n]+'</div>';
+  pills+='<div class="opill"><span>Evidence</span>'+d.ev+'</div>';
+  pills+='<div class="opill"><span>Category</span>'+d.cat+'</div>';
+  var hexes=(d.ben||[]).slice(0,4).map(function(b){return '<div class="hextile sm"><div class="hexico"><svg class="hexbg" viewBox="0 0 44 44" width="44" height="44"><path d="M22 2 40 12 40 32 22 42 4 32 4 12Z"/></svg><svg class="hexi" viewBox="0 0 24 24" width="18" height="18">'+benIcon(b)+'</svg></div><div class="hextxt">'+b+'</div></div>';}).join('');
+  document.getElementById('hero').innerHTML='<div class="hero-card"><div class="hero-mol">'+molSVG(d.n,'hero')+(num?'<div class="hero-num">'+num+'</div>':'')+'</div><div class="hero-info"><div class="hero-cat">Featured &middot; '+d.cat+'</div><h2>'+d.n+'</h2><div class="hero-aka">'+(d.aka||'')+'</div><div class="hero-pills">'+pills+'</div><div class="hero-benhex">'+hexes+'</div><button class="hero-btn" onclick="openModal('+idx+')">Explore full profile &rarr;</button></div></div>';
+}
+function renderTop(){
+  var top=POPSORTED.slice(0,8);
+  document.getElementById('toppeps').innerHTML='<div class="tp-lbl">Top peptides</div><div class="tp-row">'+top.map(function(d){
+    var idx=DATA.indexOf(d),num=('0'+(popIdx(d.n)+1)).slice(-2);
+    return '<button class="tp'+(idx===featIdx?' on':'')+'" data-i="'+idx+'" onclick="setFeat('+idx+')"><span class="tp-mol">'+molSVG(d.n,'thumb')+'</span><span class="tp-num">'+num+'</span><span class="tp-nm">'+d.n+'</span></button>';
+  }).join('')+'</div>';
+}
+function setFeat(idx){featIdx=idx;renderHero(idx);var b=document.querySelectorAll('#toppeps .tp');for(var i=0;i<b.length;i++)b[i].classList.toggle('on',+b[i].dataset.i===idx);window.scrollTo({top:0,behavior:'smooth'});}
 function render(){
   collect();
   const q=document.getElementById('search').value.trim().toLowerCase();
@@ -546,7 +618,7 @@ function render(){
     const idx=DATA.indexOf(d);
     const el=document.createElement('div');el.className='card evc-'+d.ev;el.onclick=()=>openModal(idx);
     const tags=(d.ben||[]).slice(0,3).map(b=>`<span class="bt">${b}</span>`).join('');
-    el.innerHTML=`<div class="chd"><div><h3>${d.n}</h3><div class="aka">${d.aka||''}</div></div><div class="chd-r"><button class="fav-btn${isFav(d.n)?' on':''}" title="Save to favorites">${isFav(d.n)?'\u2605':'\u2606'}</button><span class="catchip">${CATSHORT[d.cat]||d.cat}</span></div></div><div class="btags">${tags}</div><div class="ev"><span class="d" style="background:var(--ec)"></span>${d.ev} evidence</div>`;var _fb=el.querySelector(".fav-btn");if(_fb)_fb.onclick=function(e){toggleFav(d.n,e);};
+    el.innerHTML=`<div class="cardmol">${molSVG(d.n,'card')}</div><div class="chd"><div><h3>${d.n}</h3><div class="aka">${d.aka||''}</div></div><div class="chd-r"><button class="fav-btn${isFav(d.n)?' on':''}" title="Save to favorites">${isFav(d.n)?'\u2605':'\u2606'}</button><span class="catchip">${CATSHORT[d.cat]||d.cat}</span></div></div><div class="btags">${tags}</div><div class="ev"><span class="d" style="background:var(--ec)"></span>${d.ev} evidence</div>`;var _fb=el.querySelector(".fav-btn");if(_fb)_fb.onclick=function(e){toggleFav(d.n,e);};
     grid.appendChild(el);
   });
   if(!list.length)grid.innerHTML='<div class="count">No matches &mdash; try clearing a filter.</div>';
@@ -700,6 +772,8 @@ function showView(v){
 }
 
 buildStacks();
+renderTop();
+renderHero(featIdx);
 render();
 </script>
 <nav class="botnav">
