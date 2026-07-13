@@ -305,6 +305,76 @@ const STARTDOSE={
 "Matrixyl":"topical, already formulated",
 "SNAP-8":"topical, already formulated"
 };
+const COMBOS={
+"Retatrutide":"MOTS-c (mitochondrial fat-burning), Tesamorelin (protect muscle &amp; hit visceral fat), Cagrilintide (deeper appetite control)",
+"Tirzepatide":"Cagrilintide (added satiety), CJC-1295 + Ipamorelin (preserve muscle during the cut)",
+"Semaglutide":"Cagrilintide (CagriSema &mdash; more weight loss), CJC-1295 + Ipamorelin (hold muscle), Tesamorelin (visceral fat)",
+"Cagrilintide":"Semaglutide or Retatrutide (amylin + GLP-1 for stronger, longer appetite control)",
+"Survodutide":"usually run solo (investigational)",
+"Mazdutide":"usually run solo (investigational)",
+"Liraglutide":"CJC-1295 + Ipamorelin (preserve lean mass in a deficit)",
+"AOD-9604":"CJC-1295 + Ipamorelin (GH-axis fat loss), BPC-157 (joint/tendon support)",
+"Adipotide":"not stacked &mdash; high toxicity, not for human use",
+"Pramlintide":"a GLP-1 like Semaglutide (amylin + GLP-1 appetite control)",
+"Exenatide":"usually solo; sometimes CJC-1295 + Ipamorelin to hold muscle",
+"Dulaglutide":"CJC-1295 + Ipamorelin (preserve muscle)",
+"Orforglipron":"oral GLP-1, usually run solo",
+"Tesofensine":"sometimes with a GLP-1 for extra appetite control (investigational)",
+"VK2735":"investigational &mdash; usually run solo",
+"Amycretin":"investigational &mdash; usually run solo",
+"Pemvidutide":"investigational &mdash; usually run solo",
+"BRP":"research-stage &mdash; not stacked",
+"Tesamorelin":"Ipamorelin (clean GH pulse), CJC-1295 (baseline GH), Retatrutide (overall fat loss)",
+"Sermorelin":"Ipamorelin or GHRP-2 (adds a GH pulse on top of the GHRH base)",
+"CJC-1295":"Ipamorelin (the classic GH-pulse pair), MK-677 (24-hr GH/IGF-1), Tesamorelin (visceral fat)",
+"Ipamorelin":"CJC-1295 (baseline GH &mdash; the classic combo), Tesamorelin (visceral fat), Sermorelin",
+"MK-677":"CJC-1295 (adds a GH pulse), IGF-1 LR3 (muscle). Avoid pairing with Ipamorelin/other ghrelin GHRPs (redundant)",
+"GHRP-6":"CJC-1295 (GHRH + GHRP pulse) &mdash; note it spikes hunger",
+"GHRP-2":"CJC-1295 (GHRH + GHRP pulse)",
+"Hexarelin":"CJC-1295 (strong GH pulse; cycle it to avoid desensitization)",
+"IGF-1 LR3":"CJC-1295 + Ipamorelin (GH support), Follistatin (blocks myostatin), MK-677 (bulking)",
+"PEG-MGF":"IGF-1 LR3 (post-workout muscle repair + growth)",
+"Follistatin":"IGF-1 LR3 (growth signal) + CJC-1295 + Ipamorelin (GH support)",
+"BPC-157":"TB-500 (the Wolverine recovery stack), GHK-Cu (skin/tissue), KPV (calm inflammation), Thymosin Alpha-1 (gut + immune)",
+"TB-500":"BPC-157 (Wolverine recovery stack), GHK-Cu (skin), KPV (inflammation)",
+"Thymosin Beta-4":"BPC-157 (tissue repair &mdash; same idea as TB-500)",
+"GHK-Cu":"BPC-157 + TB-500 (skin + repair = GLOW/KLOW), KPV (inflammation)",
+"KPV":"BPC-157 + TB-500 + GHK-Cu (the KLOW anti-inflammatory repair blend)",
+"ARA-290":"BPC-157 (nerve + tissue repair)",
+"Thymosin Alpha-1":"BPC-157 (gut repair + immune), TB-500 (recovery)",
+"LL-37":"BPC-157 (infection + gut repair) &mdash; use cautiously (narrow window)",
+"VIP":"usually solo; sometimes after Thymosin Alpha-1 for immune support",
+"Semax":"Selank (the Russian nootropic stack &mdash; focus + calm)",
+"Selank":"Semax (focus + calm &mdash; the Russian stack)",
+"Dihexa":"Semax (cognitive; research-only)",
+"DSIP":"Epithalon (sleep + circadian), MOTS-c",
+"Oxytocin":"usually solo (nasal)",
+"PT-141":"usually solo; sometimes Oxytocin (libido + bonding)",
+"Melanotan II":"PT-141 (tan + libido); often run alone",
+"Melanotan I":"usually solo (tanning / photoprotection)",
+"Kisspeptin":"Gonadorelin (reproductive-axis research)",
+"MOTS-c":"Retatrutide + Tesamorelin (metabolic fat-loss trio), Epithalon + NAD+ (longevity)",
+"Humanin":"MOTS-c, SS-31 (mitochondrial longevity)",
+"SS-31":"MOTS-c, NAD+ (mitochondrial energy)",
+"Epithalon":"MOTS-c + NAD+ (longevity stack), DSIP (sleep)",
+"Pinealon":"Epithalon (bioregulator longevity pairing)",
+"Glutathione":"NAD+ (antioxidant + cellular energy)",
+"Gonadorelin":"Kisspeptin (reproductive-axis research)",
+"Larazotide":"BPC-157 (gut-lining repair, different mechanisms)",
+"Cerebrolysin":"Semax or Selank (neuro support)",
+"Thymogen":"Thymosin Alpha-1 (immune support)",
+"FOXO4-DRI":"research-only (senolytic) &mdash; not stacked",
+"Davunetide":"usually solo (investigational nasal)",
+"5-Amino-1MQ":"MOTS-c (metabolism / fat loss), a GLP-1",
+"NAD+":"Epithalon + MOTS-c (longevity), Glutathione (antioxidant)",
+"GLOW / KLOW Blend":"it IS the blend &mdash; GHK-Cu + BPC-157 + TB-500 (+ KPV in KLOW)",
+"Vesugen":"Epithalon (bioregulator longevity)",
+"P021":"research-only &mdash; not stacked",
+"SLU-PP-332":"research-only &mdash; not stacked",
+"Argireline":"Matrixyl + SNAP-8 (topical anti-wrinkle blend), GHK-Cu",
+"Matrixyl":"Argireline + SNAP-8 (topical anti-aging serum blend), GHK-Cu",
+"SNAP-8":"Argireline + Matrixyl (topical wrinkle blend)"
+};
 function render(){
   collect();
   const q=document.getElementById('search').value.trim().toLowerCase();
@@ -337,7 +407,7 @@ function openModal(i){
   const trials=d.trials?`<div class="sec"><h4>Key clinical trials</h4><p>${d.trials}</p>${d.link?`<p style="margin-top:8px"><a href="${d.link}" target="_blank" rel="noopener">View registered trials on ClinicalTrials.gov &rarr;</a></p>`:''}</div>`:(d.link?`<div class="sec"><h4>Clinical trials</h4><p><a href="${d.link}" target="_blank" rel="noopener">Search ClinicalTrials.gov for ${d.n} &rarr;</a></p></div>`:'');
   const overview=benHero+sec('','How it works',d.mech)+sec('','What the research shows',d.res)+trials;
   const dosing=sec('td','Starting dose &rarr; target',STARTDOSE[d.n])+sec('','Dosing (commonly reported)',d.dose)+sec('','Weekly total (reported)',d.weekly)+sec('','Typical cycle',d.cycle)+sec('recon','Reconstitution & handling',d.recon)+RECON_GUIDE+`<div class="disc">Dosing shown reflects what has been used in studies or reported in research communities &mdash; it is informational, not a recommendation. Many of these are unapproved for human use.</div>`;
-  const stacks=sec('','Commonly stacked with',d.combos)+sec('','Studied combinations',d.stack)+sec('avoid','Combinations & cautions to avoid',d.avoid);
+  const stacks=sec('','Commonly stacked with',COMBOS[d.n]||d.combos)+sec('','Studied combinations',d.stack)+sec('avoid','Combinations & cautions to avoid',d.avoid);
   const safety=sec('','Common side effects',d.sides)+sec('risk','Risks & cautions',d.risk)+sec('','Reference',d.cite);
   document.getElementById('modal').innerHTML=`
     <div class="mhead">
