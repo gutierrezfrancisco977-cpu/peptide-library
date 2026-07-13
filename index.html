@@ -236,10 +236,6 @@
   .hextile.sm{padding:10px 5px;gap:6px}
   .hextile.sm .hextxt{font-size:10px}
   .hero-btn{background:linear-gradient(92deg,var(--violet),var(--cyan));color:#05080f;border:none;font-weight:700;font-size:14px;padding:11px 22px;border-radius:12px;cursor:pointer;font-family:inherit;box-shadow:0 8px 22px rgba(34,211,238,.25)}
-  .hero-cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-  .hero-shop{display:inline-block;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.4);color:var(--benefit);font-weight:700;font-size:13.5px;padding:10px 18px;border-radius:12px}
-  .shop-cta{display:block;text-align:center;background:linear-gradient(92deg,#16a34a,#22c55e);color:#03140a;font-weight:800;font-size:14px;padding:12px 18px;border-radius:12px;margin:0 0 16px;box-shadow:0 8px 22px rgba(34,197,94,.22)}
-  .shop-cta:hover{filter:brightness(1.06)}
   @media(max-width:720px){.hero-card{flex-direction:column;align-items:center;text-align:center}.hero-mol{width:200px;height:200px}.hero-pills,.hero-benhex{justify-content:center}.hero-benhex{grid-template-columns:repeat(2,1fr);max-width:280px;margin-left:auto;margin-right:auto}}
   @media(max-width:560px){header.top h1{font-size:30px}.brand{gap:11px}.logo-mark{width:42px;height:42px}}
 </style>
@@ -349,7 +345,7 @@
   <div class="modal" id="modal"></div>
 </div>
 
-<footer><div class="wrap"><p style="margin-bottom:12px"><a href="https://retawayscience.com/" target="_blank" rel="noopener" style="color:var(--benefit);font-weight:700">&#128722; Shop research peptides at Retaway Science &rarr;</a></p><p>Independent educational reference compiled from public scientific literature and regulatory sources. Not affiliated with any manufacturer or seller, and not medical advice. Dosing/cycle details reflect what has been reported in research, not a recommendation. "Research use only" labeling does not make a substance safe or legal for human use. Consult a licensed professional.</p></div></footer>
+<footer><div class="wrap"><p>Independent educational reference compiled from public scientific literature and regulatory sources. Not affiliated with any manufacturer or seller, and not medical advice. Dosing/cycle details reflect what has been reported in research, not a recommendation. "Research use only" labeling does not make a substance safe or legal for human use. Consult a licensed professional.</p></div></footer>
 
 
 <script>
@@ -572,11 +568,6 @@ function benGrid(d){
 }
 function botFav(){showView('pep');var c=document.querySelector('.fav-chip');if(c&&!c.classList.contains('active'))c.classList.add('active');render();window.scrollTo(0,0);}
 function botSearch(){showView('pep');window.scrollTo(0,0);var s=document.getElementById('search');if(s)s.focus();}
-var RETAWAY_SELLS={"Retatrutide":1,"Tirzepatide":1,"Tesamorelin":1,"MOTS-c":1};
-function shopCTA(d){
-  if(!RETAWAY_SELLS[d.n])return '';
-  return '<a class="shop-cta" href="https://retawayscience.com/" target="_blank" rel="noopener">&#128722; Shop '+d.n+' at Retaway Science &rarr;</a>';
-}
 function _seed(str){var h=2166136261;for(var i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}return h||7;}
 function _rng(s){return function(){s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296;};}
 function molSVG(name,cls){
@@ -600,7 +591,7 @@ function renderHero(idx){
   pills+='<div class="opill"><span>Evidence</span>'+d.ev+'</div>';
   pills+='<div class="opill"><span>Category</span>'+d.cat+'</div>';
   var hexes=(d.ben||[]).slice(0,4).map(function(b){return '<div class="hextile sm"><div class="hexico"><svg class="hexbg" viewBox="0 0 44 44" width="44" height="44"><path d="M22 2 40 12 40 32 22 42 4 32 4 12Z"/></svg><svg class="hexi" viewBox="0 0 24 24" width="18" height="18">'+benIcon(b)+'</svg></div><div class="hextxt">'+b+'</div></div>';}).join('');
-  document.getElementById('hero').innerHTML='<div class="hero-card"><div class="hero-mol">'+molSVG(d.n,'hero')+(num?'<div class="hero-num">'+num+'</div>':'')+'</div><div class="hero-info"><div class="hero-cat">Featured &middot; '+d.cat+'</div><h2>'+d.n+'</h2><div class="hero-aka">'+(d.aka||'')+'</div><div class="hero-pills">'+pills+'</div><div class="hero-benhex">'+hexes+'</div><div class="hero-cta"><button class="hero-btn" onclick="openModal('+idx+')">Explore full profile &rarr;</button>'+(RETAWAY_SELLS[d.n]?'<a class="hero-shop" href="https://retawayscience.com/" target="_blank" rel="noopener">&#128722; Shop at Retaway</a>':'')+'</div></div></div>';
+  document.getElementById('hero').innerHTML='<div class="hero-card"><div class="hero-mol">'+molSVG(d.n,'hero')+(num?'<div class="hero-num">'+num+'</div>':'')+'</div><div class="hero-info"><div class="hero-cat">Featured &middot; '+d.cat+'</div><h2>'+d.n+'</h2><div class="hero-aka">'+(d.aka||'')+'</div><div class="hero-pills">'+pills+'</div><div class="hero-benhex">'+hexes+'</div><button class="hero-btn" onclick="openModal('+idx+')">Explore full profile &rarr;</button></div></div>';
 }
 function renderTop(){
   var top=POPSORTED.slice(0,8);
@@ -643,7 +634,7 @@ function openModal(i){
   const evColor={Approved:'var(--green)',Strong:'var(--green)',Moderate:'var(--blue)',Preliminary:'var(--amber)',Speculative:'var(--red)'}[d.ev];
   const benHero=benGrid(d);
   const trials=d.trials?`<div class="sec"><h4>Key clinical trials</h4><p>${d.trials}</p>${d.link?`<p style="margin-top:8px"><a href="${d.link}" target="_blank" rel="noopener">View registered trials on ClinicalTrials.gov &rarr;</a></p>`:''}</div>`:(d.link?`<div class="sec"><h4>Clinical trials</h4><p><a href="${d.link}" target="_blank" rel="noopener">Search ClinicalTrials.gov for ${d.n} &rarr;</a></p></div>`:'');
-  const overview=ovStrip(d)+shopCTA(d)+benHero+sec('','How it works',d.mech)+sec('','What the research shows',d.res)+trials;
+  const overview=ovStrip(d)+benHero+sec('','How it works',d.mech)+sec('','What the research shows',d.res)+trials;
   var _sd=STARTDOSE[d.n]||'';var _sdnote=(_sd.indexOf('Week 1')>=0)?'<div class="stack-note" style="margin:-4px 0 12px">Week 1 is a conservative ~half dose to check tolerance, then step up.</div>':'';
   var _tl=doseTimeline(d);var _tlsec=_tl?'<div class="sec"><h4>Dosing timeline (example)</h4>'+_tl+'</div>':'';
   const dosing=sec('td','Conservative ramp &mdash; week 1 &rarr; target',_sd)+_sdnote+_tlsec+sec('','Dosing (commonly reported)',d.dose)+sec('','Weekly total (reported)',d.weekly)+sec('','Typical cycle',d.cycle)+sec('recon','Reconstitution & handling',d.recon)+RECON_GUIDE+`<div class="disc">Dosing shown reflects what has been used in studies or reported in research communities &mdash; it is informational, not a recommendation. Many of these are unapproved for human use.</div>`;
