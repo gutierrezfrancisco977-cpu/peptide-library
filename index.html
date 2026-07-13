@@ -604,6 +604,10 @@ function setFeat(idx){featIdx=idx;renderHero(idx);var b=document.querySelectorAl
 function render(){
   collect();
   const q=document.getElementById('search').value.trim().toLowerCase();
+  var _browse=!q && !state.cat.size && !state.fav && !document.getElementById('evsel').value;
+  var _tp=document.getElementById('toppeps'),_hr=document.getElementById('hero');
+  if(_tp)_tp.style.display=_browse?'':'none';
+  if(_hr)_hr.style.display=_browse?'':'none';
   const grid=document.getElementById('grid');grid.innerHTML='';
   let list=DATA.filter(d=>{
     var ev=document.getElementById('evsel').value; if(ev){ if(ev==='Approved'){ if(d.ev!=='Approved'&&d.ev!=='Strong')return false; } else if(d.ev!==ev)return false; } if(state.fav && !FAVS.has(d.n))return false;
